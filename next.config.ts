@@ -1,7 +1,10 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
-  /* config options here */
-};
+  serverExternalPackages: ['shiki'],
+  images: {
+    domains: [],
+  },
+}
 
-export default nextConfig;
+export default nextConfig
