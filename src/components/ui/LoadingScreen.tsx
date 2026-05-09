@@ -1,25 +1,38 @@
 'use client'
 import React, { useState, useEffect } from 'react'
+import { usePathname } from 'next/navigation'
 
 export default function LoadingScreen() {
-  const [isVisible, setIsVisible] = useState(true)
+  const pathname = usePathname()
+  const [isVisible, setIsVisible] = useState(false)
   const [opacity, setOpacity] = useState(1)
 
   useEffect(() => {
-    // Hide loading screen after 3 seconds
-    const timer1 = setTimeout(() => {
-      setOpacity(0)
-    }, 2800)
+    // Only show on the homepage and only once per session
+    const hasShown = sessionStorage.getItem('hasShownLoading')
+    
+    if (pathname === '/' && !hasShown) {
+      setIsVisible(true)
+      sessionStorage.setItem('hasShownLoading', 'true')
 
-    const timer2 = setTimeout(() => {
+      // Hide loading screen after animation completes
+      const timer1 = setTimeout(() => {
+        setOpacity(0)
+      }, 2800)
+
+      const timer2 = setTimeout(() => {
+        setIsVisible(false)
+      }, 3300)
+
+      return () => {
+        clearTimeout(timer1)
+        clearTimeout(timer2)
+      }
+    } else {
+      // Immediately hide if not on homepage or already shown
       setIsVisible(false)
-    }, 3300)
-
-    return () => {
-      clearTimeout(timer1)
-      clearTimeout(timer2)
     }
-  }, [])
+  }, [pathname])
 
   if (!isVisible) return null
 
