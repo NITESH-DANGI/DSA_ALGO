@@ -50,7 +50,7 @@ export default function GraphCanvas({ step, graphData }: GraphCanvasProps) {
       const zoom = d3.zoom<SVGSVGElement, unknown>()
         .scaleExtent([0.3, 3])
         .on('zoom', (event) => g.attr('transform', event.transform))
-      svg.call(zoom)
+      svg.call(zoom as any)
 
       const simulation = d3.forceSimulation(nodes)
         .force('link', d3.forceLink<GNode, GLink>(links).id(d => d.id).distance(100))
