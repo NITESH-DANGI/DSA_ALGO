@@ -137,7 +137,10 @@ export default function LivePage() {
               borderRadius:'9999px', border:'none', cursor:'pointer', transition:'all 0.2s',
               color: topic === t ? '#f3dfc0' : '#7a756e',
               background: topic === t ? 'rgba(243,223,192,0.08)' : 'transparent',
-            }}>{t}</button>
+            }}
+            onMouseEnter={e => { if (topic !== t) { e.currentTarget.style.color = '#d7c4a6'; e.currentTarget.style.background = 'rgba(243,223,192,0.04)'; } }}
+            onMouseLeave={e => { if (topic !== t) { e.currentTarget.style.color = '#7a756e'; e.currentTarget.style.background = 'transparent'; } }}
+            >{t}</button>
           ))}
         </div>
 
@@ -156,10 +159,20 @@ export default function LivePage() {
                       background: done ? 'rgba(74,222,128,0.04)' : 'rgba(22,24,28,0.5)',
                       border: `1px solid ${done ? 'rgba(74,222,128,0.15)' : 'rgba(243,223,192,0.06)'}`,
                       borderRadius:'14px', padding:'20px', cursor: done ? 'default' : 'pointer',
-                      transition:'border-color 0.2s', opacity: done ? 0.6 : 1,
+                      transition:'all 0.3s ease', opacity: done ? 0.6 : 1,
                     }}
-                    onMouseEnter={e => { if (!done) e.currentTarget.style.borderColor = 'rgba(243,223,192,0.18)' }}
-                    onMouseLeave={e => { e.currentTarget.style.borderColor = done ? 'rgba(74,222,128,0.15)' : 'rgba(243,223,192,0.06)' }}
+                    onMouseEnter={e => {
+                      if (!done) {
+                        e.currentTarget.style.transform = 'translateY(-3px)'
+                        e.currentTarget.style.borderColor = 'rgba(243,223,192,0.18)'
+                        e.currentTarget.style.boxShadow = '0 6px 20px rgba(0,0,0,0.3), 0 0 0 1px rgba(243,223,192,0.1)'
+                      }
+                    }}
+                    onMouseLeave={e => {
+                      e.currentTarget.style.transform = 'translateY(0)'
+                      e.currentTarget.style.borderColor = done ? 'rgba(74,222,128,0.15)' : 'rgba(243,223,192,0.06)'
+                      e.currentTarget.style.boxShadow = 'none'
+                    }}
                     >
                       <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:'10px' }}>
                         <span style={{ fontFamily:'Hanken Grotesk,sans-serif', fontSize:'11px', fontWeight:600, color:dc.color, padding:'3px 10px', borderRadius:'8px', background:dc.bg, textTransform:'capitalize' }}>{q.difficulty}</span>
@@ -211,7 +224,10 @@ export default function LivePage() {
                         display:'flex', alignItems:'center', gap:'12px', padding:'14px 18px',
                         borderRadius:'12px', border:`1px solid ${border}`, background:bg,
                         cursor: answered ? 'default' : 'pointer', transition:'all 0.2s', textAlign:'left',
-                      }}>
+                      }}
+                      onMouseEnter={e => { if (!answered && i !== selected) { e.currentTarget.style.background = 'rgba(243,223,192,0.04)'; e.currentTarget.style.borderColor = 'rgba(243,223,192,0.15)'; } }}
+                      onMouseLeave={e => { if (!answered && i !== selected) { e.currentTarget.style.background = 'rgba(12,14,18,0.5)'; e.currentTarget.style.borderColor = 'rgba(243,223,192,0.06)'; } }}
+                      >
                         <div style={{ width:'28px', height:'28px', borderRadius:'8px', background:`${border}`, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, fontFamily:'Sora,sans-serif', fontSize:'12px', fontWeight:600, color }}>{String.fromCharCode(65+i)}</div>
                         <span style={{ fontFamily:'Hanken Grotesk,sans-serif', fontSize:'14px', color, lineHeight:1.4 }}>{opt}</span>
                         {answered && i === current.answer && <span className="material-symbols-outlined" style={{ marginLeft:'auto', fontSize:'18px', color:'#4ade80' }}>check_circle</span>}
@@ -223,7 +239,10 @@ export default function LivePage() {
 
                 {/* Actions */}
                 <div style={{ display:'flex', gap:'12px', justifyContent:'flex-end' }}>
-                  <button onClick={() => setCurrent(null)} style={{ padding:'10px 22px', borderRadius:'9999px', border:'1px solid rgba(243,223,192,0.1)', background:'transparent', color:'#988f85', fontFamily:'Sora,sans-serif', fontSize:'13px', fontWeight:500, cursor:'pointer' }}>Back</button>
+                  <button onClick={() => setCurrent(null)} style={{ padding:'10px 22px', borderRadius:'9999px', border:'1px solid rgba(243,223,192,0.1)', background:'transparent', color:'#988f85', fontFamily:'Sora,sans-serif', fontSize:'13px', fontWeight:500, cursor:'pointer', transition:'all 0.2s' }}
+                  onMouseEnter={e => { e.currentTarget.style.color = '#d7c4a6'; e.currentTarget.style.background = 'rgba(243,223,192,0.05)' }}
+                  onMouseLeave={e => { e.currentTarget.style.color = '#988f85'; e.currentTarget.style.background = 'transparent' }}
+                  >Back</button>
                   {!answered ? (
                     <button onClick={submitAnswer} disabled={selected===null} style={{
                       padding:'10px 24px', borderRadius:'9999px', border:'none',
@@ -231,13 +250,21 @@ export default function LivePage() {
                       color: selected !== null ? '#111317' : '#7a756e',
                       fontFamily:'Sora,sans-serif', fontSize:'13px', fontWeight:600,
                       cursor: selected !== null ? 'pointer' : 'not-allowed',
-                    }}>Submit Answer</button>
+                      transition:'all 0.3s ease', boxShadow: selected !== null ? '0 4px 14px rgba(243,223,192,0.25)' : 'none',
+                    }}
+                    onMouseEnter={e => { if (selected !== null) { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(243,223,192,0.4)'; } }}
+                    onMouseLeave={e => { if (selected !== null) { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 14px rgba(243,223,192,0.25)'; } }}
+                    >Submit Answer</button>
                   ) : (
                     <button onClick={() => { const next = available.filter(q=>q.id!==current.id)[0]; next ? startQuestion(next) : setCurrent(null) }} style={{
                       padding:'10px 24px', borderRadius:'9999px', border:'none',
                       background:'linear-gradient(135deg,#f3dfc0,#d7c4a6)', color:'#111317',
                       fontFamily:'Sora,sans-serif', fontSize:'13px', fontWeight:600, cursor:'pointer',
-                    }}>Next Question →</button>
+                      transition:'all 0.3s ease', boxShadow:'0 4px 14px rgba(243,223,192,0.25)',
+                    }}
+                    onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(243,223,192,0.4)'; }}
+                    onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 14px rgba(243,223,192,0.25)'; }}
+                    >Next Question →</button>
                   )}
                 </div>
               </div>
@@ -247,7 +274,18 @@ export default function LivePage() {
           {/* Leaderboard Sidebar */}
           <div style={{ width:'280px', flexShrink:0, display:'flex', flexDirection:'column', gap:'16px' }}>
 
-            <div style={{ background:'rgba(22,24,28,0.5)', border:'1px solid rgba(243,223,192,0.06)', borderRadius:'16px', padding:'20px' }}>
+            <div style={{ background:'rgba(22,24,28,0.5)', border:'1px solid rgba(243,223,192,0.06)', borderRadius:'16px', padding:'20px', transition: 'all 0.3s ease' }}
+              onMouseEnter={e => {
+                e.currentTarget.style.transform = 'translateY(-2px)'
+                e.currentTarget.style.borderColor = 'rgba(243,223,192,0.15)'
+                e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.2)'
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.transform = 'translateY(0)'
+                e.currentTarget.style.borderColor = 'rgba(243,223,192,0.06)'
+                e.currentTarget.style.boxShadow = 'none'
+              }}
+            >
               <h4 style={{ fontFamily:'Sora,sans-serif', fontSize:'13px', fontWeight:600, color:'#e2e2e8', margin:'0 0 16px', display:'flex', alignItems:'center', gap:'6px' }}>
                 <span className="material-symbols-outlined" style={{ fontSize:'16px', color:'#f3dfc0' }}>leaderboard</span>
                 Live Leaderboard
@@ -256,10 +294,13 @@ export default function LivePage() {
                 {sortedPlayers.map((p, i) => (
                   <div key={p.name} style={{
                     display:'flex', alignItems:'center', gap:'10px', padding:'10px 12px',
-                    borderRadius:'10px', transition:'all 0.4s ease',
+                    borderRadius:'10px', transition:'all 0.3s ease',
                     background: p.name === 'You' ? 'rgba(74,222,128,0.08)' : i < 3 ? 'rgba(243,223,192,0.03)' : 'transparent',
                     border: p.name === 'You' ? '1px solid rgba(74,222,128,0.2)' : '1px solid transparent',
-                  }}>
+                  }}
+                  onMouseEnter={e => { if (p.name !== 'You') e.currentTarget.style.background = 'rgba(243,223,192,0.06)' }}
+                  onMouseLeave={e => { if (p.name !== 'You') e.currentTarget.style.background = i < 3 ? 'rgba(243,223,192,0.03)' : 'transparent' }}
+                  >
                     <span style={{ fontFamily:'Sora,sans-serif', fontSize:'13px', fontWeight:600, color: i < 3 ? '#f3dfc0' : '#7a756e', width:'20px' }}>
                       {i === 0 ? '🏆' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i+1}`}
                     </span>
@@ -281,7 +322,18 @@ export default function LivePage() {
             </div>
 
             {/* Progress */}
-            <div style={{ background:'rgba(22,24,28,0.5)', border:'1px solid rgba(243,223,192,0.06)', borderRadius:'16px', padding:'20px' }}>
+            <div style={{ background:'rgba(22,24,28,0.5)', border:'1px solid rgba(243,223,192,0.06)', borderRadius:'16px', padding:'20px', transition: 'all 0.3s ease' }}
+              onMouseEnter={e => {
+                e.currentTarget.style.transform = 'translateY(-2px)'
+                e.currentTarget.style.borderColor = 'rgba(243,223,192,0.15)'
+                e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.2)'
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.transform = 'translateY(0)'
+                e.currentTarget.style.borderColor = 'rgba(243,223,192,0.06)'
+                e.currentTarget.style.boxShadow = 'none'
+              }}
+            >
               <h4 style={{ fontFamily:'Sora,sans-serif', fontSize:'13px', fontWeight:600, color:'#e2e2e8', margin:'0 0 14px', display:'flex', alignItems:'center', gap:'6px' }}>
                 <span className="material-symbols-outlined" style={{ fontSize:'16px', color:'#4ade80' }}>trending_up</span>
                 Your Progress

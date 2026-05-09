@@ -269,6 +269,18 @@ export default function CommunityPage() {
                 background: activeTab === tab ? 'rgba(243,223,192,0.08)' : 'transparent',
                 cursor: 'pointer', transition: 'all 0.25s',
               }}
+              onMouseEnter={(e) => {
+                if (activeTab !== tab) {
+                  e.currentTarget.style.color = '#d7c4a6'
+                  e.currentTarget.style.background = 'rgba(243,223,192,0.04)'
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (activeTab !== tab) {
+                  e.currentTarget.style.color = '#7a756e'
+                  e.currentTarget.style.background = 'transparent'
+                }
+              }}
             >
               {tab === 'discussions' ? '💬 Discussions' : '🏆 Leaderboard'}
             </button>
@@ -355,10 +367,18 @@ export default function CommunityPage() {
                       background: post.pinned ? 'rgba(243,223,192,0.04)' : 'rgba(22,24,28,0.5)',
                       border: `1px solid ${post.pinned ? 'rgba(243,223,192,0.12)' : 'rgba(243,223,192,0.06)'}`,
                       borderRadius: '16px', padding: '24px',
-                      transition: 'border-color 0.2s', cursor: 'pointer',
+                      transition: 'all 0.3s ease', cursor: 'pointer',
                     }}
-                    onMouseEnter={e => e.currentTarget.style.borderColor = 'rgba(243,223,192,0.18)'}
-                    onMouseLeave={e => e.currentTarget.style.borderColor = post.pinned ? 'rgba(243,223,192,0.12)' : 'rgba(243,223,192,0.06)'}
+                    onMouseEnter={e => {
+                      e.currentTarget.style.transform = 'translateY(-3px)'
+                      e.currentTarget.style.borderColor = 'rgba(243,223,192,0.25)'
+                      e.currentTarget.style.boxShadow = '0 6px 20px rgba(0,0,0,0.3), 0 0 0 1px rgba(243,223,192,0.1)'
+                    }}
+                    onMouseLeave={e => {
+                      e.currentTarget.style.transform = 'translateY(0)'
+                      e.currentTarget.style.borderColor = post.pinned ? 'rgba(243,223,192,0.12)' : 'rgba(243,223,192,0.06)'
+                      e.currentTarget.style.boxShadow = 'none'
+                    }}
                   >
                     {/* Author row */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
@@ -415,23 +435,29 @@ export default function CommunityPage() {
                     {/* Footer — Interactive Buttons */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                       {/* Like */}
-                      <button onClick={() => toggleLike(post.id)} style={{
+                      <button onClick={(e) => { e.stopPropagation(); toggleLike(post.id); }} style={{
                         display: 'flex', alignItems: 'center', gap: '5px', padding: '6px 12px',
                         borderRadius: '8px', border: 'none', cursor: 'pointer',
                         background: isLiked ? 'rgba(248,113,113,0.1)' : 'transparent',
                         transition: 'all 0.2s',
-                      }}>
+                      }}
+                      onMouseEnter={e => { if (!isLiked) e.currentTarget.style.background = 'rgba(248,113,113,0.05)' }}
+                      onMouseLeave={e => { if (!isLiked) e.currentTarget.style.background = 'transparent' }}
+                      >
                         <span className="material-symbols-outlined" style={{ fontSize: '16px', color: isLiked ? '#f87171' : '#7a756e', fontVariationSettings: isLiked ? "'FILL' 1" : "'FILL' 0" }}>favorite</span>
                         <span style={{ fontFamily: 'Hanken Grotesk, sans-serif', fontSize: '12px', color: isLiked ? '#f87171' : '#7a756e' }}>{post.likes}</span>
                       </button>
 
                       {/* Reply */}
-                      <button onClick={() => setReplyOpen(replyOpen === post.id ? null : post.id)} style={{
+                      <button onClick={(e) => { e.stopPropagation(); setReplyOpen(replyOpen === post.id ? null : post.id); }} style={{
                         display: 'flex', alignItems: 'center', gap: '5px', padding: '6px 12px',
                         borderRadius: '8px', border: 'none', cursor: 'pointer',
                         background: replyOpen === post.id ? 'rgba(130,170,255,0.1)' : 'transparent',
                         transition: 'all 0.2s',
-                      }}>
+                      }}
+                      onMouseEnter={e => { if (replyOpen !== post.id) e.currentTarget.style.background = 'rgba(130,170,255,0.05)' }}
+                      onMouseLeave={e => { if (replyOpen !== post.id) e.currentTarget.style.background = 'transparent' }}
+                      >
                         <span className="material-symbols-outlined" style={{ fontSize: '16px', color: replyOpen === post.id ? '#82aaff' : '#7a756e' }}>chat_bubble_outline</span>
                         <span style={{ fontFamily: 'Hanken Grotesk, sans-serif', fontSize: '12px', color: replyOpen === post.id ? '#82aaff' : '#7a756e' }}>{post.replies}</span>
                       </button>
@@ -439,21 +465,27 @@ export default function CommunityPage() {
                       <div style={{ flex: 1 }} />
 
                       {/* Save */}
-                      <button onClick={() => toggleSave(post.id)} style={{
+                      <button onClick={(e) => { e.stopPropagation(); toggleSave(post.id); }} style={{
                         display: 'flex', alignItems: 'center', padding: '6px 10px',
                         borderRadius: '8px', border: 'none', cursor: 'pointer',
                         background: isSaved ? 'rgba(243,223,192,0.08)' : 'transparent',
                         transition: 'all 0.2s',
-                      }}>
+                      }}
+                      onMouseEnter={e => { if (!isSaved) e.currentTarget.style.background = 'rgba(243,223,192,0.04)' }}
+                      onMouseLeave={e => { if (!isSaved) e.currentTarget.style.background = 'transparent' }}
+                      >
                         <span className="material-symbols-outlined" style={{ fontSize: '16px', color: isSaved ? '#f3dfc0' : '#7a756e', fontVariationSettings: isSaved ? "'FILL' 1" : "'FILL' 0" }}>{isSaved ? 'bookmark' : 'bookmark_border'}</span>
                       </button>
 
                       {/* Share */}
-                      <button onClick={() => handleShare(post.title)} style={{
+                      <button onClick={(e) => { e.stopPropagation(); handleShare(post.title); }} style={{
                         display: 'flex', alignItems: 'center', padding: '6px 10px',
                         borderRadius: '8px', border: 'none', cursor: 'pointer',
                         background: 'transparent', transition: 'all 0.2s',
-                      }}>
+                      }}
+                      onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
+                      onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                      >
                         <span className="material-symbols-outlined" style={{ fontSize: '16px', color: '#7a756e' }}>share</span>
                       </button>
                     </div>
@@ -582,7 +614,16 @@ export default function CommunityPage() {
                   padding: '10px 24px', borderRadius: '9999px',
                   background: 'linear-gradient(135deg, #f3dfc0, #d7c4a6)',
                   color: '#111317', fontFamily: 'Sora, sans-serif', fontSize: '13px', fontWeight: 600,
-                  textDecoration: 'none',
+                  textDecoration: 'none', transition: 'all 0.3s ease',
+                  boxShadow: '0 4px 14px rgba(243,223,192,0.25)',
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.transform = 'translateY(-3px)'
+                  e.currentTarget.style.boxShadow = '0 8px 24px rgba(243,223,192,0.4)'
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.transform = 'translateY(0)'
+                  e.currentTarget.style.boxShadow = '0 4px 14px rgba(243,223,192,0.25)'
                 }}
               >
                 <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" strokeWidth="2" fill="none"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" /></svg>
@@ -593,8 +634,19 @@ export default function CommunityPage() {
             {/* Trending Tags */}
             <div style={{
               background: 'rgba(22,24,28,0.5)', border: '1px solid rgba(243,223,192,0.06)',
-              borderRadius: '16px', padding: '20px',
-            }}>
+              borderRadius: '16px', padding: '20px', transition: 'all 0.3s ease',
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.transform = 'translateY(-2px)'
+              e.currentTarget.style.borderColor = 'rgba(243,223,192,0.15)'
+              e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.2)'
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.transform = 'translateY(0)'
+              e.currentTarget.style.borderColor = 'rgba(243,223,192,0.06)'
+              e.currentTarget.style.boxShadow = 'none'
+            }}
+            >
               <h4 style={{ fontFamily: 'Sora, sans-serif', fontSize: '13px', fontWeight: 600, color: '#e2e2e8', margin: '0 0 14px 0', display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <span className="material-symbols-outlined" style={{ fontSize: '16px', color: '#d7c4a6' }}>trending_up</span>
                 Trending Tags
@@ -605,8 +657,17 @@ export default function CommunityPage() {
                     fontFamily: 'Hanken Grotesk, sans-serif', fontSize: '11px',
                     color, padding: '4px 10px', borderRadius: '8px',
                     background: `${color}10`, border: `1px solid ${color}20`,
-                    cursor: 'pointer', transition: 'background 0.2s',
-                  }}>
+                    cursor: 'pointer', transition: 'all 0.2s',
+                  }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.background = `${color}20`
+                    e.currentTarget.style.transform = 'translateY(-1px)'
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.background = `${color}10`
+                    e.currentTarget.style.transform = 'translateY(0)'
+                  }}
+                  >
                     #{tag}
                   </span>
                 ))}
@@ -616,8 +677,19 @@ export default function CommunityPage() {
             {/* Top Contributors */}
             <div style={{
               background: 'rgba(22,24,28,0.5)', border: '1px solid rgba(243,223,192,0.06)',
-              borderRadius: '16px', padding: '20px',
-            }}>
+              borderRadius: '16px', padding: '20px', transition: 'all 0.3s ease',
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.transform = 'translateY(-2px)'
+              e.currentTarget.style.borderColor = 'rgba(243,223,192,0.15)'
+              e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.2)'
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.transform = 'translateY(0)'
+              e.currentTarget.style.borderColor = 'rgba(243,223,192,0.06)'
+              e.currentTarget.style.boxShadow = 'none'
+            }}
+            >
               <h4 style={{ fontFamily: 'Sora, sans-serif', fontSize: '13px', fontWeight: 600, color: '#e2e2e8', margin: '0 0 14px 0', display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <span className="material-symbols-outlined" style={{ fontSize: '16px', color: '#4ade80' }}>star</span>
                 Top Contributors
@@ -647,8 +719,19 @@ export default function CommunityPage() {
             {/* Quick Links */}
             <div style={{
               background: 'rgba(22,24,28,0.5)', border: '1px solid rgba(243,223,192,0.06)',
-              borderRadius: '16px', padding: '20px',
-            }}>
+              borderRadius: '16px', padding: '20px', transition: 'all 0.3s ease',
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.transform = 'translateY(-2px)'
+              e.currentTarget.style.borderColor = 'rgba(243,223,192,0.15)'
+              e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.2)'
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.transform = 'translateY(0)'
+              e.currentTarget.style.borderColor = 'rgba(243,223,192,0.06)'
+              e.currentTarget.style.boxShadow = 'none'
+            }}
+            >
               <h4 style={{ fontFamily: 'Sora, sans-serif', fontSize: '13px', fontWeight: 600, color: '#e2e2e8', margin: '0 0 14px 0' }}>
                 Quick Links
               </h4>

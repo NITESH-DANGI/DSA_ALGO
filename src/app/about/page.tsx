@@ -1,3 +1,4 @@
+'use client'
 import React from 'react';
 import Link from 'next/link';
 
@@ -54,7 +55,18 @@ export default function AboutPage() {
           {/* Why AlgoFlow? */}
           <div style={{
             background: 'rgba(22,24,28,0.6)', border: '1px solid rgba(243,223,192,0.08)',
-            borderRadius: '24px', padding: '40px', position: 'relative', overflow: 'hidden'
+            borderRadius: '24px', padding: '40px', position: 'relative', overflow: 'hidden',
+            transition: 'all 0.3s ease'
+          }}
+          onMouseEnter={e => {
+            e.currentTarget.style.transform = 'translateY(-4px)'
+            e.currentTarget.style.boxShadow = '0 10px 30px rgba(0,0,0,0.4), 0 0 0 1px rgba(243,223,192,0.15)'
+            e.currentTarget.style.borderColor = 'rgba(243,223,192,0.3)'
+          }}
+          onMouseLeave={e => {
+            e.currentTarget.style.transform = 'translateY(0)'
+            e.currentTarget.style.boxShadow = 'none'
+            e.currentTarget.style.borderColor = 'rgba(243,223,192,0.08)'
           }}>
             <h2 style={{
               fontFamily: 'Sora, sans-serif', fontSize: '24px', fontWeight: 600,
@@ -76,7 +88,17 @@ export default function AboutPage() {
           {/* What I Learned */}
           <div style={{
             background: 'rgba(22,24,28,0.6)', border: '1px solid rgba(243,223,192,0.08)',
-            borderRadius: '24px', padding: '40px'
+            borderRadius: '24px', padding: '40px', transition: 'all 0.3s ease'
+          }}
+          onMouseEnter={e => {
+            e.currentTarget.style.transform = 'translateY(-4px)'
+            e.currentTarget.style.boxShadow = '0 10px 30px rgba(0,0,0,0.4), 0 0 0 1px rgba(243,223,192,0.15)'
+            e.currentTarget.style.borderColor = 'rgba(243,223,192,0.3)'
+          }}
+          onMouseLeave={e => {
+            e.currentTarget.style.transform = 'translateY(0)'
+            e.currentTarget.style.boxShadow = 'none'
+            e.currentTarget.style.borderColor = 'rgba(243,223,192,0.08)'
           }}>
             <h2 style={{
               fontFamily: 'Sora, sans-serif', fontSize: '24px', fontWeight: 600,
@@ -131,7 +153,17 @@ export default function AboutPage() {
                 padding: '12px 24px', borderRadius: '9999px',
                 background: 'rgba(243,223,192,0.1)', border: '1px solid rgba(243,223,192,0.2)',
                 color: '#f3dfc0', fontFamily: 'Sora, sans-serif', fontSize: '14px', fontWeight: 500,
-                textDecoration: 'none', transition: 'all 0.2s',
+                textDecoration: 'none', transition: 'all 0.3s ease',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-3px)'
+                e.currentTarget.style.background = 'rgba(243,223,192,0.15)'
+                e.currentTarget.style.boxShadow = '0 8px 24px rgba(243,223,192,0.2)'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)'
+                e.currentTarget.style.background = 'rgba(243,223,192,0.1)'
+                e.currentTarget.style.boxShadow = 'none'
               }}>
                 <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
@@ -145,6 +177,15 @@ export default function AboutPage() {
                 background: 'linear-gradient(135deg, #f3dfc0 0%, #d7c4a6 100%)',
                 color: '#111317', fontFamily: 'Sora, sans-serif', fontSize: '14px', fontWeight: 600,
                 textDecoration: 'none', boxShadow: '0 4px 14px rgba(243,223,192,0.25)',
+                transition: 'all 0.3s ease',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-3px)'
+                e.currentTarget.style.boxShadow = '0 8px 24px rgba(243,223,192,0.4)'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)'
+                e.currentTarget.style.boxShadow = '0 4px 14px rgba(243,223,192,0.25)'
               }}>
                 <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>play_arrow</span>
                 Explore Algorithms

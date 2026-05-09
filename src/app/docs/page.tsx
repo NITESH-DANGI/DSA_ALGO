@@ -141,7 +141,18 @@ const SECTIONS: DocSection[] = [
             { icon: 'hub', cat: 'Graph', items: 'BFS, DFS, Dijkstra', desc: 'Force-directed graph layouts showing node frontiers and visited paths.' },
             { icon: 'account_tree', cat: 'Tree', items: 'BST Insertion, BST Search, Inorder Traversal', desc: 'Hierarchical tree rendering demonstrating recursive operations.' },
           ].map(c => (
-            <div key={c.cat} style={{ padding: '16px', borderRadius: '12px', background: 'rgba(30,32,36,0.5)', border: '1px solid rgba(243,223,192,0.08)' }}>
+            <div key={c.cat} style={{ padding: '16px', borderRadius: '12px', background: 'rgba(30,32,36,0.5)', border: '1px solid rgba(243,223,192,0.08)', transition: 'all 0.3s ease' }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-3px)'
+                e.currentTarget.style.borderColor = 'rgba(243,223,192,0.25)'
+                e.currentTarget.style.boxShadow = '0 6px 20px rgba(0,0,0,0.3), 0 0 0 1px rgba(243,223,192,0.1)'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)'
+                e.currentTarget.style.borderColor = 'rgba(243,223,192,0.08)'
+                e.currentTarget.style.boxShadow = 'none'
+              }}
+            >
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
                 <span className="material-symbols-outlined" style={{ fontSize: '20px', color: '#d7c4a6' }}>{c.icon}</span>
                 <span style={{ fontFamily: 'Sora, sans-serif', fontSize: '15px', fontWeight: 600, color: '#e2e2e8' }}>{c.cat}</span>
@@ -222,7 +233,16 @@ const SECTIONS: DocSection[] = [
             { token: '--outline', value: '#988f85', label: 'Muted Text / Icons' },
             { token: '--border', value: 'rgba(243,223,192,0.1)', label: 'Panel Borders' },
           ].map(t => (
-            <div key={t.token} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 14px', borderRadius: '8px', background: 'rgba(30,32,36,0.5)', border: '1px solid rgba(243,223,192,0.06)' }}>
+            <div key={t.token} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 14px', borderRadius: '8px', background: 'rgba(30,32,36,0.5)', border: '1px solid rgba(243,223,192,0.06)', transition: 'all 0.2s ease' }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'rgba(30,32,36,0.8)'
+                e.currentTarget.style.borderColor = 'rgba(243,223,192,0.15)'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'rgba(30,32,36,0.5)'
+                e.currentTarget.style.borderColor = 'rgba(243,223,192,0.06)'
+              }}
+            >
               <div style={{ width: '18px', height: '18px', borderRadius: '4px', background: t.value, border: '1px solid rgba(255,255,255,0.1)', flexShrink: 0 }} />
               <div>
                 <code style={{ ...codeStyle, fontSize: '12px' }}>{t.token}</code>
@@ -259,7 +279,18 @@ const SECTIONS: DocSection[] = [
             { key: 'End', action: 'Jump to Last Step' },
             { key: 'Enter', action: 'Visualize Custom Input' },
           ].map(s => (
-            <div key={s.key} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', borderRadius: '8px', background: 'rgba(30,32,36,0.5)', border: '1px solid rgba(243,223,192,0.06)' }}>
+            <div key={s.key} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', borderRadius: '8px', background: 'rgba(30,32,36,0.5)', border: '1px solid rgba(243,223,192,0.06)', transition: 'all 0.2s ease' }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'rgba(30,32,36,0.8)'
+                e.currentTarget.style.borderColor = 'rgba(243,223,192,0.15)'
+                e.currentTarget.style.transform = 'translateY(-1px)'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'rgba(30,32,36,0.5)'
+                e.currentTarget.style.borderColor = 'rgba(243,223,192,0.06)'
+                e.currentTarget.style.transform = 'translateY(0)'
+              }}
+            >
               <kbd style={kbdStyle}>{s.key}</kbd>
               <span style={{ fontSize: '13px', color: '#988f85', fontWeight: 500 }}>{s.action}</span>
             </div>
@@ -355,6 +386,12 @@ export default function DocsPage() {
                 borderLeft: isActive ? '2px solid #d7c4a6' : '2px solid transparent',
                 transition: 'all 0.2s',
               }}
+              onMouseEnter={(e) => {
+                if (!isActive) e.currentTarget.style.background = 'rgba(243,223,192,0.03)'
+              }}
+              onMouseLeave={(e) => {
+                if (!isActive) e.currentTarget.style.background = 'transparent'
+              }}
             >
               <span className="material-symbols-outlined" style={{ fontSize: '18px', color: isActive ? '#d7c4a6' : '#7a756e' }}>{section.icon}</span>
               {section.title}
@@ -365,7 +402,16 @@ export default function DocsPage() {
         {/* Bottom link */}
         <div style={{ marginTop: 'auto', paddingTop: '16px', borderTop: '1px solid rgba(243,223,192,0.06)' }}>
           <a href="https://github.com/NITESH-DANGI/DSA_ALGO" target="_blank" rel="noopener noreferrer"
-            style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 12px', borderRadius: '8px', textDecoration: 'none', fontSize: '12px', color: '#7a756e', fontFamily: 'Hanken Grotesk, sans-serif' }}>
+            style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 12px', borderRadius: '8px', textDecoration: 'none', fontSize: '12px', color: '#7a756e', fontFamily: 'Hanken Grotesk, sans-serif', transition: 'all 0.2s ease' }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.color = '#f3dfc0'
+              e.currentTarget.style.background = 'rgba(243,223,192,0.05)'
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = '#7a756e'
+              e.currentTarget.style.background = 'transparent'
+            }}
+          >
             <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>code</span>
             View on GitHub
           </a>
@@ -419,13 +465,19 @@ export default function DocsPage() {
             return (
               <>
                 {prev ? (
-                  <button onClick={() => setActiveSection(prev.id)} style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'none', border: 'none', cursor: 'pointer', color: '#988f85', fontFamily: 'Sora, sans-serif', fontSize: '13px', padding: 0 }}>
+                  <button onClick={() => setActiveSection(prev.id)} style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'none', border: 'none', cursor: 'pointer', color: '#988f85', fontFamily: 'Sora, sans-serif', fontSize: '13px', padding: 0, transition: 'color 0.2s ease' }}
+                    onMouseEnter={(e) => e.currentTarget.style.color = '#f3dfc0'}
+                    onMouseLeave={(e) => e.currentTarget.style.color = '#988f85'}
+                  >
                     <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>arrow_back</span>
                     {prev.title}
                   </button>
                 ) : <div />}
                 {next ? (
-                  <button onClick={() => setActiveSection(next.id)} style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'none', border: 'none', cursor: 'pointer', color: '#d7c4a6', fontFamily: 'Sora, sans-serif', fontSize: '13px', padding: 0 }}>
+                  <button onClick={() => setActiveSection(next.id)} style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'none', border: 'none', cursor: 'pointer', color: '#d7c4a6', fontFamily: 'Sora, sans-serif', fontSize: '13px', padding: 0, transition: 'color 0.2s ease' }}
+                    onMouseEnter={(e) => e.currentTarget.style.color = '#f3dfc0'}
+                    onMouseLeave={(e) => e.currentTarget.style.color = '#d7c4a6'}
+                  >
                     {next.title}
                     <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>arrow_forward</span>
                   </button>

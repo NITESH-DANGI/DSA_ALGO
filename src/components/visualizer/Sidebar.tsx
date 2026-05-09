@@ -106,12 +106,22 @@ export default function Sidebar({ activeCategory }: SidebarProps) {
         >
           Advanced Modules
         </button>
-        <a href="#" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 12px', fontSize: '12px', color: '#7a756e', textDecoration: 'none', fontFamily: 'Hanken Grotesk, sans-serif' }}>
+        <Link 
+          href="/settings"
+          style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 12px', fontSize: '12px', color: '#7a756e', textDecoration: 'none', fontFamily: 'Hanken Grotesk, sans-serif', width: '100%', transition: 'color 0.2s' }}
+          onMouseEnter={e => e.currentTarget.style.color = '#f3dfc0'}
+          onMouseLeave={e => e.currentTarget.style.color = '#7a756e'}
+        >
           <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>settings</span>Settings
-        </a>
-        <a href="#" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 12px', fontSize: '12px', color: '#7a756e', textDecoration: 'none', fontFamily: 'Hanken Grotesk, sans-serif' }}>
+        </Link>
+        <Link 
+          href="/support"
+          style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 12px', fontSize: '12px', color: '#7a756e', textDecoration: 'none', fontFamily: 'Hanken Grotesk, sans-serif', width: '100%', transition: 'color 0.2s' }}
+          onMouseEnter={e => e.currentTarget.style.color = '#f3dfc0'}
+          onMouseLeave={e => e.currentTarget.style.color = '#7a756e'}
+        >
           <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>help</span>Support
-        </a>
+        </Link>
       </div>
     </aside>
   )

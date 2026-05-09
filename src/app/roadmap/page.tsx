@@ -598,6 +598,16 @@ export default function RoadmapPage() {
                     position: 'relative',
                     backdropFilter: 'blur(8px)',
                   }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-4px)'
+                    e.currentTarget.style.borderColor = 'rgba(243,223,192,0.3)'
+                    e.currentTarget.style.boxShadow = '0 10px 30px rgba(0,0,0,0.4), 0 0 0 1px rgba(243,223,192,0.15)'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)'
+                    e.currentTarget.style.borderColor = isExpanded ? 'rgba(243,223,192,0.14)' : 'rgba(243,223,192,0.06)'
+                    e.currentTarget.style.boxShadow = 'none'
+                  }}
                 >
                   {/* Node circle on the inner edge */}
                   <div style={{
@@ -673,7 +683,11 @@ export default function RoadmapPage() {
                               <Link href={topic.link} onClick={(e) => e.stopPropagation()} style={{
                                 fontFamily: 'Hanken Grotesk, sans-serif', fontSize: '13px', color: '#d7c4a6',
                                 textDecoration: 'underline', textUnderlineOffset: '3px',
-                              }}>
+                                transition: 'color 0.2s ease',
+                              }}
+                              onMouseEnter={(e) => e.currentTarget.style.color = '#f3dfc0'}
+                              onMouseLeave={(e) => e.currentTarget.style.color = '#d7c4a6'}
+                              >
                                 {topic.name}
                                 <span className="material-symbols-outlined" style={{ fontSize: '11px', marginLeft: '4px', verticalAlign: 'middle' }}>open_in_new</span>
                               </Link>
@@ -714,10 +728,18 @@ export default function RoadmapPage() {
                               padding: '10px 14px', borderRadius: '10px',
                               background: 'rgba(255,68,68,0.04)',
                               border: '1px solid rgba(255,68,68,0.1)',
-                              textDecoration: 'none', transition: 'border-color 0.2s',
+                              textDecoration: 'none', transition: 'all 0.2s',
                             }}
-                            onMouseEnter={(e) => e.currentTarget.style.borderColor = 'rgba(255,68,68,0.25)'}
-                            onMouseLeave={(e) => e.currentTarget.style.borderColor = 'rgba(255,68,68,0.1)'}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.borderColor = 'rgba(255,68,68,0.25)'
+                              e.currentTarget.style.background = 'rgba(255,68,68,0.08)'
+                              e.currentTarget.style.transform = 'translateY(-2px)'
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.borderColor = 'rgba(255,68,68,0.1)'
+                              e.currentTarget.style.background = 'rgba(255,68,68,0.04)'
+                              e.currentTarget.style.transform = 'translateY(0)'
+                            }}
                           >
                             <div style={{ width: '28px', height: '28px', borderRadius: '6px', background: 'rgba(255,68,68,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                               <span className="material-symbols-outlined" style={{ fontSize: '16px', color: '#ff4444' }}>smart_display</span>
@@ -782,6 +804,15 @@ export default function RoadmapPage() {
             background: 'linear-gradient(135deg, #f3dfc0 0%, #d7c4a6 100%)',
             color: '#111317', fontFamily: 'Sora, sans-serif', fontSize: '14px', fontWeight: 600,
             textDecoration: 'none', boxShadow: '0 4px 14px rgba(243,223,192,0.25)',
+            transition: 'all 0.3s ease',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'translateY(-3px)'
+            e.currentTarget.style.boxShadow = '0 8px 24px rgba(243,223,192,0.4)'
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'translateY(0)'
+            e.currentTarget.style.boxShadow = '0 4px 14px rgba(243,223,192,0.25)'
           }}>
             <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>play_arrow</span>
             Explore Algorithms
