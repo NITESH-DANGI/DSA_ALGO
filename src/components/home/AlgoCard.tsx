@@ -2,7 +2,12 @@
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { AlgoMeta } from '@/engine/types'
-import { DIFFICULTY_COLORS } from '@/lib/constants'
+
+const DIFF_COLORS: Record<string, string> = {
+  easy: '#8bc34a',
+  medium: '#d7c4a6',
+  hard: '#c45c5c',
+}
 
 interface AlgoCardProps {
   algo: AlgoMeta
@@ -10,100 +15,127 @@ interface AlgoCardProps {
 }
 
 export default function AlgoCard({ algo, index }: AlgoCardProps) {
-  const diffColor = DIFFICULTY_COLORS[algo.difficulty]
+  const diffColor = DIFF_COLORS[algo.difficulty] || '#988f85'
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, delay: index * 0.05 }}
-      className="h-full"
+      transition={{ duration: 0.35, delay: index * 0.04 }}
     >
-      <Link href={`/visualize/${algo.id}`} className="block h-full">
-        <div
-          className="group relative rounded-xl border overflow-hidden transition-all duration-300 hover:scale-[1.03] hover:-translate-y-1 cursor-pointer h-full flex flex-col"
+      <div
+        style={{
+          background: 'rgba(30, 32, 36, 0.7)',
+          border: '1px solid rgba(243,223,192,0.08)',
+          borderRadius: '14px',
+          padding: '22px 24px 20px',
+          display: 'flex',
+          flexDirection: 'column' as const,
+          gap: '12px',
+          backdropFilter: 'blur(12px)',
+          transition: 'border-color 0.3s, box-shadow 0.3s',
+          cursor: 'pointer',
+          minHeight: '210px',
+        }}
+        onMouseEnter={e => {
+          e.currentTarget.style.borderColor = 'rgba(243,223,192,0.18)'
+          e.currentTarget.style.boxShadow = '0 8px 32px rgba(0,0,0,0.3)'
+        }}
+        onMouseLeave={e => {
+          e.currentTarget.style.borderColor = 'rgba(243,223,192,0.08)'
+          e.currentTarget.style.boxShadow = 'none'
+        }}
+      >
+        {/* Title */}
+        <h3
           style={{
-            background: 'var(--surface)',
-            borderColor: 'var(--border)',
-          }}
-          onMouseEnter={e => {
-            const el = e.currentTarget as HTMLElement
-            el.style.borderColor = 'var(--border-hover)'
-            el.style.boxShadow = '0 8px 40px rgba(196,167,108,0.08), 0 0 20px rgba(196,167,108,0.04)'
-          }}
-          onMouseLeave={e => {
-            const el = e.currentTarget as HTMLElement
-            el.style.borderColor = 'var(--border)'
-            el.style.boxShadow = 'none'
+            fontFamily: 'Sora, sans-serif',
+            fontSize: '18px',
+            fontWeight: 600,
+            color: '#e2e2e8',
+            margin: 0,
+            letterSpacing: '-0.01em',
           }}
         >
-          {/* Top accent bar */}
-          <div className="h-1 w-full" style={{ background: `linear-gradient(90deg, ${diffColor}, transparent)` }} />
+          {algo.name}
+        </h3>
 
-          {/* Content Section */}
-          <div className="flex flex-col flex-1 p-5">
-            {/* Category + difficulty */}
-            <div className="flex items-center justify-between mb-3">
-              <span
-                className="px-2.5 py-1 rounded text-[10px] uppercase tracking-wider"
-                style={{
-                  background: 'var(--accent-dim)',
-                  color: 'var(--accent)',
-                  fontFamily: 'var(--font-space-mono), monospace',
-                }}
-              >
-                {algo.category}
-              </span>
-              <span
-                className="px-2.5 py-1 rounded-full text-[10px] uppercase tracking-wider"
-                style={{
-                  color: diffColor,
-                  background: `${diffColor}15`,
-                  fontFamily: 'var(--font-space-mono), monospace',
-                }}
-              >
-                {algo.difficulty}
-              </span>
-            </div>
+        {/* Description — 2 line clamp */}
+        <p
+          style={{
+            fontFamily: 'Hanken Grotesk, sans-serif',
+            fontSize: '13px',
+            lineHeight: 1.55,
+            color: '#7a756e',
+            margin: 0,
+            display: '-webkit-box',
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: 'vertical' as const,
+            overflow: 'hidden',
+            flex: 1,
+          }}
+        >
+          {algo.description}
+        </p>
 
-            {/* Name */}
-            <h3 className="text-lg font-bold mb-2 group-hover:text-[var(--accent)] transition-colors" style={{ color: 'var(--text)' }}>
-              {algo.name}
-            </h3>
-
-            {/* Description */}
-            <p className="text-[13px] leading-relaxed mb-4 flex-1 line-clamp-2" style={{ color: 'var(--text-muted)' }}>
-              {algo.description}
-            </p>
-
-            {/* Complexity row */}
-            <div className="flex items-center gap-4 mb-4 pb-4" style={{ borderBottom: '1px solid var(--border)' }}>
-              <div className="flex items-center gap-1.5">
-                <span className="text-[10px] uppercase tracking-wider font-bold" style={{ color: 'var(--text-muted)' }}>Time</span>
-                <span className="text-xs font-bold" style={{ color: 'var(--accent)', fontFamily: 'var(--font-space-mono), monospace' }}>{algo.complexity.time.best}</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <span className="text-[10px] uppercase tracking-wider font-bold" style={{ color: 'var(--text-muted)' }}>Space</span>
-                <span className="text-xs font-bold" style={{ color: 'var(--accent-purple)', fontFamily: 'var(--font-space-mono), monospace' }}>{algo.complexity.space}</span>
-              </div>
-            </div>
-
-            {/* CTA */}
-            <div
-              className="flex items-center justify-between text-sm font-semibold"
-              style={{ color: 'var(--accent)' }}
-            >
-              <span className="group-hover:tracking-wide transition-all">Visualize</span>
-              <span
-                className="w-8 h-8 rounded-full flex items-center justify-center transition-all group-hover:translate-x-1"
-                style={{ background: 'var(--accent-dim)', border: '1px solid var(--border)' }}
-              >
-                →
-              </span>
-            </div>
-          </div>
+        {/* Complexity + Difficulty row */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px',
+            flexWrap: 'wrap' as const,
+          }}
+        >
+          <span style={{ fontFamily: 'Hanken Grotesk, sans-serif', fontSize: '12px', color: '#7a756e' }}>
+            Time: {algo.complexity.time.average}
+          </span>
+          <span style={{ fontFamily: 'Hanken Grotesk, sans-serif', fontSize: '12px', color: '#7a756e' }}>
+            Space: {algo.complexity.space}
+          </span>
+          <span
+            style={{
+              fontFamily: 'Sora, sans-serif',
+              fontSize: '12px',
+              fontWeight: 500,
+              color: diffColor,
+              marginLeft: 'auto',
+            }}
+          >
+            {algo.difficulty.charAt(0).toUpperCase() + algo.difficulty.slice(1)}
+          </span>
         </div>
-      </Link>
+
+        {/* Visualize button */}
+        <Link
+          href={`/visualize/${algo.id}`}
+          style={{
+            display: 'block',
+            textAlign: 'center',
+            padding: '10px 0',
+            borderRadius: '10px',
+            background: 'rgba(243,223,192,0.06)',
+            border: '1px solid rgba(243,223,192,0.1)',
+            color: '#cfc5b9',
+            fontFamily: 'Sora, sans-serif',
+            fontSize: '13px',
+            fontWeight: 500,
+            textDecoration: 'none',
+            transition: 'all 0.25s ease',
+            marginTop: '4px',
+          }}
+          onMouseEnter={e => {
+            e.currentTarget.style.background = 'rgba(243,223,192,0.12)'
+            e.currentTarget.style.borderColor = 'rgba(243,223,192,0.2)'
+          }}
+          onMouseLeave={e => {
+            e.currentTarget.style.background = 'rgba(243,223,192,0.06)'
+            e.currentTarget.style.borderColor = 'rgba(243,223,192,0.1)'
+          }}
+        >
+          Visualize
+        </Link>
+      </div>
     </motion.div>
   )
 }
