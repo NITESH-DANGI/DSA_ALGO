@@ -2,8 +2,7 @@ import type { Metadata } from 'next'
 import { Sora, Space_Mono } from 'next/font/google'
 import './globals.css'
 import Navbar from '@/components/layout/Navbar'
-
-
+import LoadingScreen from '@/components/ui/LoadingScreen'
 const sora = Sora({
   subsets: ['latin'],
   variable: '--font-sora',
@@ -33,6 +32,7 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
       </head>
       <body style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+        <LoadingScreen />
         <Navbar />
         <main style={{ flex: 1 }}>
           {children}
