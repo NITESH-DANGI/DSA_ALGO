@@ -296,6 +296,7 @@ function DraggableCard({ children, style, className }: { children: React.ReactNo
     const onUp = () => {
       setDragging(false)
       dragRef.current = null
+      setPos(null) // snap back to original position
       document.removeEventListener('mousemove', onMove)
       document.removeEventListener('mouseup', onUp)
       document.removeEventListener('touchmove', onMove)
@@ -303,7 +304,7 @@ function DraggableCard({ children, style, className }: { children: React.ReactNo
       const q = QUOTES[Math.floor(Math.random() * QUOTES.length)]
       setQuote(q)
       if (timerRef.current) clearTimeout(timerRef.current)
-      timerRef.current = setTimeout(() => setQuote(null), 3000)
+      timerRef.current = setTimeout(() => setQuote(null), 7000)
     }
     document.addEventListener('mousemove', onMove)
     document.addEventListener('mouseup', onUp)
@@ -312,8 +313,8 @@ function DraggableCard({ children, style, className }: { children: React.ReactNo
   }, [])
 
   const finalStyle: React.CSSProperties = pos
-    ? { ...style, position: 'fixed', left: pos.x, top: pos.y, right: 'auto', bottom: 'auto', animation: 'none', cursor: dragging ? 'grabbing' : 'grab', zIndex: 50, transition: dragging ? 'none' : 'box-shadow 0.3s' }
-    : { ...style, cursor: 'grab' }
+    ? { ...style, position: 'fixed', left: pos.x, top: pos.y, right: 'auto', bottom: 'auto', animation: 'none', cursor: 'grabbing', zIndex: 50, transition: 'none' }
+    : { ...style, cursor: 'grab', transition: 'all 0.4s ease' }
 
   return (
     <>
@@ -322,13 +323,39 @@ function DraggableCard({ children, style, className }: { children: React.ReactNo
       </div>
       {quote && (
         <div style={{
-          position: 'fixed', left: pos ? pos.x : 0, top: pos ? pos.y - 52 : 0,
-          padding: '10px 18px', borderRadius: '10px', zIndex: 100,
-          background: 'rgba(243,223,192,0.12)', border: '1px solid rgba(243,223,192,0.25)',
-          backdropFilter: 'blur(16px)', maxWidth: '280px',
-          animation: 'popIn 0.3s ease-out',
-        }}>
-          <span style={{ fontFamily: 'Hanken Grotesk, sans-serif', fontSize: '12px', color: '#f3dfc0', lineHeight: 1.4 }}>{quote}</span>
+          position: 'fixed', inset: 0, zIndex: 9999,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(8px)',
+          animation: 'popIn 0.35s ease-out',
+        }} onClick={() => setQuote(null)}>
+          <div style={{
+            maxWidth: '420px', width: '90%', padding: '32px 36px', borderRadius: '20px',
+            background: 'linear-gradient(145deg, rgba(22,24,28,0.95), rgba(12,14,18,0.95))',
+            border: '1px solid rgba(243,223,192,0.15)',
+            boxShadow: '0 24px 64px rgba(0,0,0,0.5), 0 0 40px rgba(243,223,192,0.06)',
+            textAlign: 'center',
+          }} onClick={(e) => e.stopPropagation()}>
+            <span className="material-symbols-outlined" style={{ fontSize: '36px', color: '#d7c4a6', marginBottom: '16px', display: 'block' }}>auto_awesome</span>
+            <p style={{
+              fontFamily: 'Hanken Grotesk, sans-serif', fontSize: '17px',
+              color: '#f3dfc0', lineHeight: 1.6, margin: '0 0 16px 0', fontStyle: 'italic',
+            }}>
+              &ldquo;{quote}&rdquo;
+            </p>
+            <span style={{ fontFamily: 'Sora, sans-serif', fontSize: '11px', color: '#7a756e', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+              Keep going, legend 🔥
+            </span>
+            <div style={{ marginTop: '20px' }}>
+              <button onClick={() => setQuote(null)} style={{
+                padding: '8px 24px', borderRadius: '9999px', border: '1px solid rgba(243,223,192,0.15)',
+                background: 'rgba(243,223,192,0.06)', color: '#d7c4a6',
+                fontFamily: 'Sora, sans-serif', fontSize: '12px', fontWeight: 600, cursor: 'pointer',
+                transition: 'background 0.2s',
+              }}>
+                Got it ✨
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </>
