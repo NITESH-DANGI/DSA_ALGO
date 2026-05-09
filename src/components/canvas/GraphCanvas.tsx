@@ -61,17 +61,17 @@ export default function GraphCanvas({ step, graphData }: GraphCanvasProps) {
       // Links
       g.append('g').attr('class', 'links').selectAll('line')
         .data(links).enter().append('line')
-        .attr('stroke', '#2a3a4a').attr('stroke-width', 2)
+        .attr('stroke', '#2a2520').attr('stroke-width', 2)
         .attr('data-id', d => [typeof d.source === 'string' ? d.source : d.source.id, typeof d.target === 'string' ? d.target : d.target.id].sort().join('-'))
 
       // Nodes
       const nodeG = g.append('g').attr('class', 'nodes').selectAll('g')
         .data(nodes).enter().append('g').attr('data-id', d => d.id)
 
-      nodeG.append('circle').attr('r', 22).attr('fill', '#6a7f94').attr('stroke', '#2a3a4a').attr('stroke-width', 2)
+      nodeG.append('circle').attr('r', 22).attr('fill', '#6B6560').attr('stroke', '#2a2520').attr('stroke-width', 2)
       nodeG.append('text').text(d => d.id)
         .attr('text-anchor', 'middle').attr('dy', '0.35em')
-        .attr('fill', '#e8f0f8').attr('font-size', '13px').attr('font-family', 'Space Mono, monospace').attr('font-weight', 'bold')
+        .attr('fill', '#E8E0D4').attr('font-size', '13px').attr('font-family', 'Space Mono, monospace').attr('font-weight', 'bold')
 
       simulation.on('tick', () => {
         g.selectAll('.links line')
@@ -95,14 +95,14 @@ export default function GraphCanvas({ step, graphData }: GraphCanvasProps) {
       const circle = el.select('circle')
 
       if (nodeId === step.activeNode) {
-        circle.attr('fill', '#00ffb4').attr('r', 28)
-          .attr('filter', 'drop-shadow(0 0 10px rgba(0,255,180,0.6))')
+        circle.attr('fill', '#C4A76C').attr('r', 28)
+          .attr('filter', 'drop-shadow(0 0 10px rgba(196,167,108,0.6))')
       } else if (step.visitedNodes.includes(nodeId)) {
-        circle.attr('fill', '#00ffb4').attr('r', 22).attr('filter', 'none')
+        circle.attr('fill', '#C4A76C').attr('r', 22).attr('filter', 'none')
       } else if (step.frontier.includes(nodeId)) {
-        circle.attr('fill', '#ffd080').attr('r', 22).attr('filter', 'none')
+        circle.attr('fill', '#D4B896').attr('r', 22).attr('filter', 'none')
       } else {
-        circle.attr('fill', '#6a7f94').attr('r', 22).attr('filter', 'none')
+        circle.attr('fill', '#6B6560').attr('r', 22).attr('filter', 'none')
       }
     })
 
@@ -111,15 +111,15 @@ export default function GraphCanvas({ step, graphData }: GraphCanvasProps) {
       const el = d3.select(this)
       const edgeId = el.attr('data-id')
       if (step.visitedEdges.includes(edgeId)) {
-        el.attr('stroke', '#00ffb4').attr('stroke-width', 3)
+        el.attr('stroke', '#C4A76C').attr('stroke-width', 3)
       } else {
-        el.attr('stroke', '#2a3a4a').attr('stroke-width', 2)
+        el.attr('stroke', '#2a2520').attr('stroke-width', 2)
       }
     })
   }, [step, graphData])
 
   return (
-    <div className="w-full h-full min-h-[300px]" style={{ background: 'var(--bg)' }}>
+    <div className="w-full h-full min-h-[300px]" style={{ background: 'var(--surface)' }}>
       <svg ref={svgRef} width="100%" height="100%" style={{ minHeight: 300 }} />
     </div>
   )

@@ -1,31 +1,47 @@
-// Color tokens
+// Color tokens matching the reference design
 export const COLORS = {
-  bg: '#080c10',
-  surface: '#0e1318',
-  surface2: '#141c24',
-  accent: '#00ffb4',
-  accentRed: '#ff4e6a',
-  accentPurple: '#7c6fff',
-  text: '#e8f0f8',
-  textMuted: '#6a7f94',
-  codeBg: '#0a1520',
+  bg: '#111317',
+  surface: '#111317',
+  surfaceContainerLow: '#1a1c20',
+  surfaceContainer: '#1e2024',
+  surfaceContainerHigh: '#282a2e',
+  surfaceBright: '#37393e',
+  primary: '#f3dfc0',
+  primaryContainer: '#d6c3a5',
+  primaryFixedDim: '#d7c4a6',
+  onPrimary: '#3a2f1a',
+  secondary: '#dec39b',
+  secondaryContainer: '#594628',
+  tertiary: '#d5e7ca',
+  onSurface: '#e2e2e8',
+  onSurfaceVariant: '#cfc5b9',
+  outline: '#988f85',
+  outlineVariant: '#4c463d',
+
+  accent: '#d7c4a6',
+  accentLight: '#f3dfc0',
+  accentRed: '#C45C5C',
+  accentPurple: '#8B7EC8',
+  text: '#e2e2e8',
+  textMuted: '#988f85',
+  codeBg: '#0c0e12',
 
   // Bar colors
-  barDefault: 'rgba(0, 255, 180, 0.2)',
-  barActive: '#00ffb4',
-  barSorted: 'rgba(124, 111, 255, 0.45)',
-  barPivot: 'rgba(255, 78, 106, 0.5)',
-  barCompare: 'rgba(255, 208, 80, 0.5)',
-  barSwapping: '#ff9f43',
-  barFound: '#00ffb4',
+  barDefault: 'rgba(243,223,192,0.3)',
+  barActive: '#d6c3a5',
+  barSorted: 'rgba(213,231,202,0.45)',
+  barPivot: 'rgba(196,92,92,0.5)',
+  barCompare: 'rgba(243,223,192,0.6)',
+  barSwapping: '#dec39b',
+  barFound: '#d6c3a5',
 
   // Graph colors
-  nodeDefault: '#6a7f94',
-  nodeVisited: '#00ffb4',
-  nodeFrontier: '#ffd080',
-  nodeActive: '#00ffb4',
-  edgeDefault: '#2a3a4a',
-  edgeVisited: '#00ffb4',
+  nodeDefault: '#6B6560',
+  nodeVisited: '#d6c3a5',
+  nodeFrontier: '#dec39b',
+  nodeActive: '#d6c3a5',
+  edgeDefault: '#4c463d',
+  edgeVisited: '#d6c3a5',
 } as const
 
 // Speed presets
@@ -41,9 +57,9 @@ export const SPEED_TO_MS: Record<number, number> = {
 
 // Difficulty colors
 export const DIFFICULTY_COLORS = {
-  easy: '#00ffb4',
-  medium: '#ffd080',
-  hard: '#ff4e6a',
+  easy: '#d6c3a5',
+  medium: '#dec39b',
+  hard: '#C45C5C',
 } as const
 
 // Category labels

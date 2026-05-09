@@ -1,15 +1,24 @@
 import type { Metadata } from 'next'
+import { Sora, Space_Mono } from 'next/font/google'
 import './globals.css'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 
+const sora = Sora({
+  subsets: ['latin'],
+  variable: '--font-sora',
+  weight: ['300', '400', '500', '600'],
+})
+
+const spaceMono = Space_Mono({
+  weight: ['400', '700'],
+  subsets: ['latin'],
+  variable: '--font-space-mono',
+})
+
 export const metadata: Metadata = {
-  title: 'AlgoFlow — DSA Algorithm Visualizer',
+  title: 'AlgoFlow — Algorithm Laboratory',
   description: 'Watch algorithms think. Step through sorting, graphs, and trees with animated visuals and synchronized code highlighting.',
-  openGraph: {
-    title: 'AlgoFlow — DSA Algorithm Visualizer',
-    description: 'Step-by-step algorithm visualization with code highlighting. Sorting, graphs, and trees.',
-  },
 }
 
 export default function RootLayout({
@@ -18,13 +27,12 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className={`dark ${sora.variable} ${spaceMono.variable}`}>
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
       </head>
-      <body className="grid-bg" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <body style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
         <Navbar />
         <main style={{ flex: 1 }}>
           {children}

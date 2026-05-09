@@ -1,17 +1,17 @@
 'use client'
-import { useEffect, useMemo } from 'react'
+import { useEffect, useState } from 'react'
 import { useVisualizerStore } from '@/store/visualizerStore'
 import { usePlayback } from '@/hooks/usePlayback'
 import { useAudio } from '@/hooks/useAudio'
 import { AlgoMeta, SortStep, GraphStep, TreeStep } from '@/engine/types'
-import { DIFFICULTY_COLORS } from '@/lib/constants'
 import SortingCanvas from '@/components/canvas/SortingCanvas'
 import GraphCanvas from '@/components/canvas/GraphCanvas'
 import TreeCanvas from '@/components/canvas/TreeCanvas'
 import CodePanel from '@/components/code/CodePanel'
 import ControlBar from '@/components/visualizer/ControlBar'
-import StepExplainer from '@/components/visualizer/StepExplainer'
 import ComplexityCard from '@/components/visualizer/ComplexityCard'
+import StatePanel from '@/components/visualizer/StatePanel'
+import Sidebar from '@/components/visualizer/Sidebar'
 import InputEditor from '@/components/visualizer/InputEditor'
 
 interface VisualizerShellProps {
@@ -28,11 +28,19 @@ export default function VisualizerShell({ algo }: VisualizerShellProps) {
   usePlayback()
   useAudio()
 
-  // Auto-load and auto-play on mount
+  const [graphData, setGraphData] = useState<Record<string, string[]>>(() => {
+    if (algo.category === 'graph') {
+      try {
+        const parsed = JSON.parse(algo.defaultInput)
+        return parsed.graph || {}
+      } catch { return {} }
+    }
+    return {}
+  })
+
   useEffect(() => {
     const generatedSteps = algo.generate(algo.defaultInput)
     loadAlgo(algo.id, generatedSteps)
-    // Auto-play after a short delay to let the UI render first
     const timer = setTimeout(() => play(), 500)
     return () => clearTimeout(timer)
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -42,27 +50,15 @@ export default function VisualizerShell({ algo }: VisualizerShellProps) {
     ? steps[currentStepIndex]
     : null
 
-  const graphData = useMemo(() => {
-    if (algo.category === 'graph') {
-      try {
-        const parsed = JSON.parse(algo.defaultInput)
-        return parsed.graph || {}
-      } catch { return {} }
-    }
-    return {}
-  }, [algo])
-
   const handleInputSubmit = (input: string) => {
     try {
       const newSteps = algo.generate(input)
       loadAlgo(algo.id, newSteps)
-      // Auto-play after generating new steps
       setTimeout(() => play(), 300)
-      // Update graph data if needed
       if (algo.category === 'graph') {
         try {
           const parsed = JSON.parse(input)
-          Object.assign(graphData, parsed.graph || {})
+          setGraphData(parsed.graph || {})
         } catch { /* ignore */ }
       }
     } catch (e) {
@@ -71,37 +67,26 @@ export default function VisualizerShell({ algo }: VisualizerShellProps) {
   }
 
   return (
-    <div className="min-h-screen pt-20 pb-8 px-4 md:px-6">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="flex flex-wrap items-center gap-3 mb-6">
-          <h1 className="text-2xl md:text-3xl font-bold" style={{ color: 'var(--text)' }}>
-            {algo.name}
-          </h1>
-          <span
-            className="px-2.5 py-1 rounded-full text-xs font-mono font-bold uppercase"
-            style={{
-              color: DIFFICULTY_COLORS[algo.difficulty],
-              background: `${DIFFICULTY_COLORS[algo.difficulty]}15`,
-              border: `1px solid ${DIFFICULTY_COLORS[algo.difficulty]}30`,
-            }}
-          >
-            {algo.difficulty}
-          </span>
-          <span className="px-2.5 py-1 rounded text-xs font-mono" style={{ background: 'var(--tag-bg)', color: 'var(--accent)' }}>
-            {algo.category}
-          </span>
-        </div>
+    <div className="flex h-[calc(100vh-80px)]" style={{ marginTop: '80px' }}>
+      {/* Left Sidebar */}
+      <Sidebar activeCategory={algo.category} />
 
-        {/* Input Editor */}
-        <div className="mb-6">
-          <InputEditor algo={algo} onSubmit={handleInputSubmit} />
-        </div>
+      {/* Center: Visualizer Stage */}
+      <section className="flex-1 flex flex-col gap-6 p-6 lg:p-8 overflow-hidden">
+        {/* Input Editor - compact */}
+        <InputEditor algo={algo} onSubmit={handleInputSubmit} />
 
-        {/* Main content: 2 column layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-6">
-          {/* Canvas (60%) */}
-          <div className="lg:col-span-3 rounded-xl border overflow-hidden" style={{ borderColor: 'var(--border)', minHeight: '400px' }}>
+        {/* Canvas area */}
+        <div
+          className="flex-1 glass-panel rounded-xl relative overflow-hidden flex items-end justify-center visualizer-grid"
+          style={{ minHeight: '280px' }}
+        >
+          {/* Atmospheric overlays */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg)] via-transparent to-transparent opacity-80 pointer-events-none" />
+          <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(circle at center, rgba(214,195,165,0.05) 0%, transparent 70%)' }} />
+
+          {/* Canvas */}
+          <div className="relative z-10 w-full h-full">
             {currentStep?.type === 'sort' && (
               <SortingCanvas step={currentStep as SortStep} />
             )}
@@ -112,45 +97,52 @@ export default function VisualizerShell({ algo }: VisualizerShellProps) {
               <TreeCanvas step={currentStep as TreeStep} />
             )}
             {!currentStep && (
-              <div className="w-full h-full min-h-[400px] flex items-center justify-center" style={{ color: 'var(--text-muted)' }}>
-                <p className="font-mono text-sm">Click &quot;Generate Steps&quot; to start</p>
+              <div className="w-full h-full flex items-center justify-center" style={{ color: 'var(--on-surface-variant)' }}>
+                <p className="text-sm" style={{ fontFamily: 'var(--font-space-mono), monospace' }}>Loading…</p>
               </div>
             )}
           </div>
 
-          {/* Code Panel (40%) */}
-          <div className="lg:col-span-2" style={{ minHeight: '400px' }}>
-            <CodePanel
-              code={algo.code[language]}
-              language={language}
-              highlightLines={currentStep?.highlightLines || []}
-            />
+          {/* Controls overlay at bottom */}
+          <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 z-20">
+            <ControlBar />
           </div>
         </div>
 
-        {/* Step Explainer */}
-        {currentStep && (
-          <div className="mb-4">
-            <StepExplainer
-              explanation={currentStep.explanation}
-              comparisons={currentStep.type === 'sort' ? (currentStep as SortStep).comparisons : undefined}
-              swaps={currentStep.type === 'sort' ? (currentStep as SortStep).swaps : undefined}
-              frontier={currentStep.type === 'graph' ? (currentStep as GraphStep).frontier : undefined}
-              visitedCount={currentStep.type === 'graph' ? (currentStep as GraphStep).visitedNodes.length : undefined}
-            />
+        {/* Code Editor */}
+        <div className="glass-panel rounded-xl overflow-hidden" style={{ height: '30%', minHeight: '180px' }}>
+          <CodePanel
+            code={algo.code[language]}
+            language={language}
+            highlightLines={currentStep?.highlightLines || []}
+          />
+        </div>
+      </section>
+
+      {/* Right: Analytics Panel */}
+      <aside className="hidden xl:flex flex-col w-80 gap-6 p-6 overflow-auto">
+        <ComplexityCard algo={algo} />
+
+        {/* Performance Profile */}
+        <div className="glass-panel rounded-xl p-6 flex-1 flex flex-col">
+          <h3 className="label-caps pb-2 mb-4" style={{ color: 'var(--primary)', borderBottom: '1px solid rgba(76, 70, 61, 0.3)' }}>
+            PERFORMANCE PROFILE
+          </h3>
+          <div className="flex-1 relative flex items-end justify-between pt-10">
+            <svg className="absolute inset-0 w-full h-full opacity-80" preserveAspectRatio="none" viewBox="0 0 100 100">
+              <path d="M0,90 Q20,80 40,60 T100,20" fill="none" stroke="var(--tertiary)" strokeWidth="2" vectorEffect="non-scaling-stroke" />
+              <path d="M0,95 Q30,90 60,70 T100,40" fill="none" stroke="var(--secondary)" strokeDasharray="4" strokeWidth="1" vectorEffect="non-scaling-stroke" opacity="0.5" />
+            </svg>
+            <div className="absolute inset-0" style={{ borderLeft: '1px solid rgba(76,70,61,0.3)', borderBottom: '1px solid rgba(76,70,61,0.3)' }} />
           </div>
-        )}
-
-        {/* Complexity Card */}
-        <div className="mb-4">
-          <ComplexityCard algo={algo} />
+          <div className="flex justify-between mt-2" style={{ color: 'var(--outline)', fontSize: '11px' }}>
+            <span>Elements (n)</span>
+            <span>Time (ms)</span>
+          </div>
         </div>
 
-        {/* Control Bar - sticky */}
-        <div className="sticky bottom-4 z-40">
-          <ControlBar />
-        </div>
-      </div>
+        <StatePanel step={currentStep} />
+      </aside>
     </div>
   )
 }

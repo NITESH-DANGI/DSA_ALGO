@@ -8,7 +8,6 @@ export default function ControlBar() {
   const speed = useVisualizerStore(s => s.speed)
   const currentStepIndex = useVisualizerStore(s => s.currentStepIndex)
   const steps = useVisualizerStore(s => s.steps)
-  const audioEnabled = useVisualizerStore(s => s.audioEnabled)
   const play = useVisualizerStore(s => s.play)
   const pause = useVisualizerStore(s => s.pause)
   const stepForward = useVisualizerStore(s => s.stepForward)
@@ -16,113 +15,87 @@ export default function ControlBar() {
   const reset = useVisualizerStore(s => s.reset)
   const jumpToStep = useVisualizerStore(s => s.jumpToStep)
   const setSpeed = useVisualizerStore(s => s.setSpeed)
-  const setAudioEnabled = useVisualizerStore(s => s.setAudioEnabled)
 
   const totalSteps = steps.length
-  const progress = totalSteps > 0 ? ((currentStepIndex + 1) / totalSteps) * 100 : 0
 
-  // Keyboard shortcuts
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return
       switch (e.code) {
-        case 'Space': e.preventDefault(); status === 'playing' ? pause() : play(); break
+        case 'Space':
+          e.preventDefault()
+          if (status === 'playing') { pause() } else { play() }
+          break
         case 'ArrowRight': e.preventDefault(); stepForward(); break
         case 'ArrowLeft': e.preventDefault(); stepBack(); break
         case 'Home': e.preventDefault(); reset(); break
         case 'End': e.preventDefault(); jumpToStep(totalSteps - 1); break
-        case 'Digit1': e.preventDefault(); setSpeed(0.25); break
-        case 'Digit2': e.preventDefault(); setSpeed(0.5); break
-        case 'Digit3': e.preventDefault(); setSpeed(1); break
-        case 'Digit4': e.preventDefault(); setSpeed(2); break
-        case 'Digit5': e.preventDefault(); setSpeed(4); break
       }
     }
     window.addEventListener('keydown', handler)
     return () => window.removeEventListener('keydown', handler)
-  }, [status, totalSteps, play, pause, stepForward, stepBack, reset, jumpToStep, setSpeed])
+  }, [status, totalSteps, play, pause, stepForward, stepBack, reset, jumpToStep])
 
-  const btnStyle = {
-    background: 'var(--surface-2)',
-    color: 'var(--text)',
-    border: '1px solid var(--border)',
-  }
+  // Speed as percentage for slider visual
+  const speedIdx = SPEED_PRESETS.indexOf(speed as typeof SPEED_PRESETS[number])
+  const speedPct = speedIdx >= 0 ? ((speedIdx + 1) / SPEED_PRESETS.length) * 100 : 50
 
   return (
-    <div className="rounded-xl border p-4" style={{ background: 'var(--surface)', borderColor: 'var(--border)' }}>
-      {/* Controls row */}
-      <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
-        <div className="flex items-center gap-2">
-          <button onClick={reset} className="px-3 py-2 rounded-lg text-sm transition-all hover:scale-105" style={btnStyle} title="First (Home)">⏮</button>
-          <button onClick={stepBack} className="px-3 py-2 rounded-lg text-sm transition-all hover:scale-105" style={btnStyle} title="Prev (←)">⏪</button>
-          <button
-            onClick={() => status === 'playing' ? pause() : play()}
-            className="px-5 py-2 rounded-lg text-sm font-bold transition-all hover:scale-105"
-            style={{ background: 'var(--accent)', color: 'var(--bg)', border: 'none' }}
-            title="Play/Pause (Space)"
-          >
-            {status === 'playing' ? '⏸ Pause' : '▶ Play'}
-          </button>
-          <button onClick={stepForward} className="px-3 py-2 rounded-lg text-sm transition-all hover:scale-105" style={btnStyle} title="Next (→)">⏩</button>
-          <button onClick={() => jumpToStep(totalSteps - 1)} className="px-3 py-2 rounded-lg text-sm transition-all hover:scale-105" style={btnStyle} title="Last (End)">⏭</button>
-        </div>
+    <div
+      className="glass-panel rounded-full px-6 py-3 flex items-center gap-6 tactile-shadow"
+    >
+      {/* Play button */}
+      <button
+        onClick={() => status === 'playing' ? pause() : play()}
+        className="w-10 h-10 rounded-full flex items-center justify-center tactile-shadow hover:scale-105 transition-transform"
+        style={{ background: 'var(--primary)', color: 'var(--on-primary)' }}
+        title="Play/Pause (Space)"
+      >
+        <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1", fontSize: 22 }}>
+          {status === 'playing' ? 'pause' : 'play_arrow'}
+        </span>
+      </button>
 
-        <div className="flex items-center gap-3">
-          {/* Speed */}
-          <div className="flex items-center gap-1">
-            {SPEED_PRESETS.map((s, i) => (
-              <button
-                key={s}
-                onClick={() => setSpeed(s)}
-                className="px-2 py-1 rounded text-xs font-mono transition-all"
-                style={{
-                  background: speed === s ? 'var(--accent)' : 'var(--surface-2)',
-                  color: speed === s ? 'var(--bg)' : 'var(--text-muted)',
-                  border: `1px solid ${speed === s ? 'var(--accent)' : 'var(--border)'}`,
-                }}
-                title={`Speed ${s}x (${i + 1})`}
-              >
-                {s}x
-              </button>
-            ))}
-          </div>
+      {/* Step forward */}
+      <button
+        onClick={stepForward}
+        className="transition-colors hover:opacity-80"
+        style={{ color: 'var(--on-surface-variant)' }}
+        title="Next Step (→)"
+      >
+        <span className="material-symbols-outlined" style={{ fontSize: 22 }}>skip_next</span>
+      </button>
 
-          {/* Step counter */}
-          <span className="text-xs font-mono px-3 py-1 rounded" style={{ background: 'var(--surface-2)', color: 'var(--text-muted)' }}>
-            {currentStepIndex + 1} / {totalSteps}
-          </span>
+      {/* Divider */}
+      <div className="h-6 w-px" style={{ background: 'rgba(76,70,61,0.5)' }} />
 
-          {/* Audio */}
-          <button
-            onClick={() => setAudioEnabled(!audioEnabled)}
-            className="px-2 py-1 rounded text-sm transition-all"
-            style={{
-              background: audioEnabled ? 'var(--accent)' : 'var(--surface-2)',
-              color: audioEnabled ? 'var(--bg)' : 'var(--text-muted)',
-              border: `1px solid ${audioEnabled ? 'var(--accent)' : 'var(--border)'}`,
-            }}
-            title="Toggle audio"
-          >
-            {audioEnabled ? '🔊' : '🔇'}
-          </button>
+      {/* Speed slider */}
+      <div className="flex items-center gap-3">
+        <span className="label-caps" style={{ color: 'var(--on-surface-variant)' }}>SPEED</span>
+        <div
+          className="w-24 h-1 rounded-full overflow-hidden relative cursor-pointer"
+          style={{ background: 'var(--surface-container-high)' }}
+          onClick={e => {
+            const rect = e.currentTarget.getBoundingClientRect()
+            const pct = (e.clientX - rect.left) / rect.width
+            const idx = Math.round(pct * (SPEED_PRESETS.length - 1))
+            setSpeed(SPEED_PRESETS[Math.max(0, Math.min(idx, SPEED_PRESETS.length - 1))])
+          }}
+        >
+          <div className="absolute left-0 top-0 bottom-0 rounded-full" style={{ width: `${speedPct}%`, background: 'var(--primary)' }} />
+          <div
+            className="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full shadow-sm -ml-1.5"
+            style={{ left: `${speedPct}%`, background: 'var(--primary-fixed)' }}
+          />
         </div>
       </div>
 
-      {/* Progress bar */}
-      <div
-        className="w-full h-1.5 rounded-full overflow-hidden cursor-pointer"
-        style={{ background: 'var(--surface-2)' }}
-        onClick={e => {
-          const rect = e.currentTarget.getBoundingClientRect()
-          const pct = (e.clientX - rect.left) / rect.width
-          const idx = Math.round(pct * (totalSteps - 1))
-          jumpToStep(Math.max(0, Math.min(idx, totalSteps - 1)))
-        }}
-      >
-        <div
-          className="h-full rounded-full transition-all duration-200"
-          style={{ width: `${progress}%`, background: 'var(--accent)' }}
-        />
+      {/* Size (step counter) */}
+      <div className="flex items-center gap-3">
+        <span className="label-caps" style={{ color: 'var(--on-surface-variant)' }}>STEP</span>
+        <span className="text-xs" style={{ color: 'var(--on-surface-variant)', fontFamily: 'var(--font-space-mono), monospace' }}>
+          {currentStepIndex + 1}/{totalSteps}
+        </span>
       </div>
     </div>
   )

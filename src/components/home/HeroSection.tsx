@@ -1,78 +1,160 @@
-'use client'
-import { motion } from 'framer-motion'
+
 import Link from 'next/link'
+import ParticleCanvas from './ParticleCanvas'
 
 export default function HeroSection() {
   return (
-    <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden grid-bg">
-      {/* Glow orbs */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full opacity-20 blur-3xl pointer-events-none" style={{ background: 'var(--accent)' }} />
-      <div className="absolute bottom-1/4 right-1/4 w-64 h-64 rounded-full opacity-10 blur-3xl pointer-events-none" style={{ background: 'var(--accent-purple)' }} />
+    <section
+      style={{
+        position: 'relative',
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        overflow: 'hidden',
+        paddingTop: '80px',
+      }}
+    >
+      {/* Particle background */}
+      <ParticleCanvas />
 
-      <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: 'easeOut' }}
-        >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-mono mb-8"
-            style={{ background: 'var(--tag-bg)', color: 'var(--accent)', border: '1px solid var(--border)' }}>
-            <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: 'var(--accent)' }} />
-            14 algorithms • 4 languages • Real-time visualization
-          </div>
-        </motion.div>
+      {/* Floating system labels */}
+      <span className="sys-label animate-float" style={{ position: 'absolute', top: '30%', left: '8%', animationDelay: '0s' }}>
+        SYS.NODE.A7
+      </span>
+      <span className="sys-label animate-float" style={{ position: 'absolute', top: '40%', right: '10%', animationDelay: '1.5s' }}>
+        LATENCY: 32MS
+      </span>
+      <span className="sys-label animate-float" style={{ position: 'absolute', top: '65%', right: '14%', animationDelay: '3s' }}>
+        MEM.ALLOC.OK
+      </span>
 
-        <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.1, ease: 'easeOut' }}
-          className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6"
-          style={{ color: 'var(--text)' }}
+      {/* Content */}
+      <div
+        style={{
+          position: 'relative',
+          zIndex: 10,
+          textAlign: 'center',
+          padding: '0 24px',
+          maxWidth: '800px',
+          margin: '0 auto',
+        }}
+      >
+        {/* Badge */}
+        <div
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '10px',
+            padding: '10px 20px',
+            borderRadius: '9999px',
+            background: 'rgba(243, 223, 192, 0.06)',
+            border: '1px solid rgba(243, 223, 192, 0.12)',
+            marginBottom: '48px',
+            fontFamily: 'Hanken Grotesk, sans-serif',
+            fontSize: '11px',
+            fontWeight: 600,
+            letterSpacing: '0.12em',
+            textTransform: 'uppercase' as const,
+            color: '#988f85',
+          }}
         >
-          Watch algorithms{' '}
-          <span style={{ color: 'var(--accent)' }}>think.</span>
-        </motion.h1>
+          <span style={{ fontSize: '14px' }}>⚙</span>
+          ALGO_CORE V2.4.0 ACTIVE
+        </div>
 
-        <motion.p
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2, ease: 'easeOut' }}
-          className="text-lg md:text-xl max-w-2xl mx-auto mb-10"
-          style={{ color: 'var(--text-muted)' }}
-        >
-          Step through sorting, graphs, and trees — one operation at a time.
-          With synchronized code highlighting. No setup required.
-        </motion.p>
-
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3, ease: 'easeOut' }}
-          className="flex flex-col sm:flex-row items-center justify-center gap-4"
-        >
-          <a
-            href="#algorithms"
-            className="px-8 py-3.5 rounded-lg font-semibold text-base transition-all hover:scale-105 active:scale-95"
+        {/* Heading */}
+        <h1 style={{ margin: '0 0 24px 0', lineHeight: 1 }}>
+          <span
             style={{
-              background: 'var(--accent)',
-              color: 'var(--bg)',
-              boxShadow: '0 0 30px rgba(0, 255, 180, 0.3)',
+              display: 'block',
+              fontFamily: 'Sora, sans-serif',
+              fontSize: 'clamp(40px, 7vw, 72px)',
+              fontWeight: 300,
+              letterSpacing: '-0.03em',
+              color: '#e2e2e8',
+              lineHeight: 1.1,
             }}
           >
-            Explore algorithms →
+            Watch Algorithms
+          </span>
+          <span
+            style={{
+              display: 'block',
+              fontFamily: 'Sora, sans-serif',
+              fontSize: 'clamp(40px, 7vw, 72px)',
+              fontWeight: 300,
+              fontStyle: 'italic',
+              letterSpacing: '-0.03em',
+              color: '#d7c4a6',
+              lineHeight: 1.1,
+              marginTop: '8px',
+            }}
+          >
+            Think
+          </span>
+        </h1>
+
+        {/* Subtitle */}
+        <p
+          style={{
+            fontFamily: 'Hanken Grotesk, sans-serif',
+            fontSize: '16px',
+            lineHeight: 1.7,
+            color: '#988f85',
+            maxWidth: '520px',
+            margin: '0 auto 48px',
+          }}
+        >
+          Immerse yourself in high-fidelity, interactive visualizations. Understand
+          complex logic through refined surfaces and dynamic neural paths.
+        </p>
+
+        {/* CTAs */}
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', flexWrap: 'wrap' as const }}>
+          <a
+            href="/algorithms"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              padding: '14px 32px',
+              borderRadius: '12px',
+              background: 'linear-gradient(135deg, #d7c4a6, #f3dfc0)',
+              color: '#1a1c20',
+              fontFamily: 'Hanken Grotesk, sans-serif',
+              fontSize: '12px',
+              fontWeight: 600,
+              letterSpacing: '0.1em',
+              textTransform: 'uppercase' as const,
+              textDecoration: 'none',
+              boxShadow: '0 4px 24px rgba(215,196,166,0.2)',
+              transition: 'transform 0.2s, box-shadow 0.2s',
+            }}
+          >
+            Start Visualizing
           </a>
           <Link
-            href="/visualize/quick-sort"
-            className="px-8 py-3.5 rounded-lg font-semibold text-base border transition-all hover:scale-105 active:scale-95"
+            href="/algorithms"
             style={{
-              borderColor: 'var(--border-hover)',
-              color: 'var(--accent)',
+              display: 'inline-flex',
+              alignItems: 'center',
+              padding: '14px 32px',
+              borderRadius: '12px',
               background: 'transparent',
+              color: '#988f85',
+              fontFamily: 'Hanken Grotesk, sans-serif',
+              fontSize: '12px',
+              fontWeight: 600,
+              letterSpacing: '0.1em',
+              textTransform: 'uppercase' as const,
+              textDecoration: 'none',
+              border: '1px solid rgba(243, 223, 192, 0.2)',
+              transition: 'transform 0.2s, border-color 0.3s',
             }}
           >
-            Quick Sort →
+            Explore Algorithms
           </Link>
-        </motion.div>
+        </div>
       </div>
     </section>
   )

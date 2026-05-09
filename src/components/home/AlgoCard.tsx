@@ -1,7 +1,6 @@
 'use client'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import Image from 'next/image'
 import { AlgoMeta } from '@/engine/types'
 import { DIFFICULTY_COLORS } from '@/lib/constants'
 
@@ -10,16 +9,8 @@ interface AlgoCardProps {
   index: number
 }
 
-const CATEGORY_IMAGES: Record<string, string> = {
-  sorting: '/algo-art/sorting.png',
-  searching: '/algo-art/searching.png',
-  graph: '/algo-art/graph.png',
-  tree: '/algo-art/tree.png',
-}
-
 export default function AlgoCard({ algo, index }: AlgoCardProps) {
   const diffColor = DIFFICULTY_COLORS[algo.difficulty]
-  const image = CATEGORY_IMAGES[algo.category] || CATEGORY_IMAGES.sorting
 
   return (
     <motion.div
@@ -30,7 +21,7 @@ export default function AlgoCard({ algo, index }: AlgoCardProps) {
     >
       <Link href={`/visualize/${algo.id}`} className="block h-full">
         <div
-          className="group relative rounded-2xl border overflow-hidden transition-all duration-300 hover:scale-[1.03] hover:-translate-y-1 cursor-pointer h-full flex flex-col"
+          className="group relative rounded-xl border overflow-hidden transition-all duration-300 hover:scale-[1.03] hover:-translate-y-1 cursor-pointer h-full flex flex-col"
           style={{
             background: 'var(--surface)',
             borderColor: 'var(--border)',
@@ -38,7 +29,7 @@ export default function AlgoCard({ algo, index }: AlgoCardProps) {
           onMouseEnter={e => {
             const el = e.currentTarget as HTMLElement
             el.style.borderColor = 'var(--border-hover)'
-            el.style.boxShadow = '0 8px 40px rgba(0,255,180,0.12), 0 0 20px rgba(0,255,180,0.06)'
+            el.style.boxShadow = '0 8px 40px rgba(196,167,108,0.08), 0 0 20px rgba(196,167,108,0.04)'
           }}
           onMouseLeave={e => {
             const el = e.currentTarget as HTMLElement
@@ -46,52 +37,35 @@ export default function AlgoCard({ algo, index }: AlgoCardProps) {
             el.style.boxShadow = 'none'
           }}
         >
-          {/* Image Section */}
-          <div className="relative w-full h-40 overflow-hidden">
-            <Image
-              src={image}
-              alt={algo.name}
-              fill
-              className="object-cover transition-transform duration-500 group-hover:scale-110"
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-            />
-            {/* Gradient overlay */}
-            <div
-              className="absolute inset-0"
-              style={{
-                background: 'linear-gradient(180deg, transparent 30%, var(--surface) 100%)',
-              }}
-            />
-            {/* Difficulty badge on image */}
-            <div className="absolute top-3 right-3">
+          {/* Top accent bar */}
+          <div className="h-1 w-full" style={{ background: `linear-gradient(90deg, ${diffColor}, transparent)` }} />
+
+          {/* Content Section */}
+          <div className="flex flex-col flex-1 p-5">
+            {/* Category + difficulty */}
+            <div className="flex items-center justify-between mb-3">
               <span
-                className="px-2.5 py-1 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider backdrop-blur-md"
+                className="px-2.5 py-1 rounded text-[10px] uppercase tracking-wider"
+                style={{
+                  background: 'var(--accent-dim)',
+                  color: 'var(--accent)',
+                  fontFamily: 'var(--font-space-mono), monospace',
+                }}
+              >
+                {algo.category}
+              </span>
+              <span
+                className="px-2.5 py-1 rounded-full text-[10px] uppercase tracking-wider"
                 style={{
                   color: diffColor,
-                  background: `${diffColor}20`,
-                  border: `1px solid ${diffColor}40`,
+                  background: `${diffColor}15`,
+                  fontFamily: 'var(--font-space-mono), monospace',
                 }}
               >
                 {algo.difficulty}
               </span>
             </div>
-            {/* Category badge on image */}
-            <div className="absolute top-3 left-3">
-              <span
-                className="px-2.5 py-1 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider backdrop-blur-md"
-                style={{
-                  background: 'rgba(0,255,180,0.12)',
-                  color: 'var(--accent)',
-                  border: '1px solid rgba(0,255,180,0.2)',
-                }}
-              >
-                {algo.category}
-              </span>
-            </div>
-          </div>
 
-          {/* Content Section */}
-          <div className="flex flex-col flex-1 p-5">
             {/* Name */}
             <h3 className="text-lg font-bold mb-2 group-hover:text-[var(--accent)] transition-colors" style={{ color: 'var(--text)' }}>
               {algo.name}
@@ -106,11 +80,11 @@ export default function AlgoCard({ algo, index }: AlgoCardProps) {
             <div className="flex items-center gap-4 mb-4 pb-4" style={{ borderBottom: '1px solid var(--border)' }}>
               <div className="flex items-center gap-1.5">
                 <span className="text-[10px] uppercase tracking-wider font-bold" style={{ color: 'var(--text-muted)' }}>Time</span>
-                <span className="text-xs font-mono font-bold" style={{ color: 'var(--accent)' }}>{algo.complexity.time.best}</span>
+                <span className="text-xs font-bold" style={{ color: 'var(--accent)', fontFamily: 'var(--font-space-mono), monospace' }}>{algo.complexity.time.best}</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <span className="text-[10px] uppercase tracking-wider font-bold" style={{ color: 'var(--text-muted)' }}>Space</span>
-                <span className="text-xs font-mono font-bold" style={{ color: 'var(--accent-purple)' }}>{algo.complexity.space}</span>
+                <span className="text-xs font-bold" style={{ color: 'var(--accent-purple)', fontFamily: 'var(--font-space-mono), monospace' }}>{algo.complexity.space}</span>
               </div>
             </div>
 
@@ -120,8 +94,9 @@ export default function AlgoCard({ algo, index }: AlgoCardProps) {
               style={{ color: 'var(--accent)' }}
             >
               <span className="group-hover:tracking-wide transition-all">Visualize</span>
-              <span className="w-8 h-8 rounded-full flex items-center justify-center transition-all group-hover:translate-x-1"
-                style={{ background: 'rgba(0,255,180,0.1)', border: '1px solid rgba(0,255,180,0.2)' }}
+              <span
+                className="w-8 h-8 rounded-full flex items-center justify-center transition-all group-hover:translate-x-1"
+                style={{ background: 'var(--accent-dim)', border: '1px solid var(--border)' }}
               >
                 →
               </span>

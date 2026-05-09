@@ -8,26 +8,34 @@ interface ComplexityCardProps {
 export default function ComplexityCard({ algo }: ComplexityCardProps) {
   const { complexity } = algo
   return (
-    <div className="rounded-xl border p-4" style={{ background: 'var(--surface)', borderColor: 'var(--border)' }}>
-      <h3 className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: 'var(--text-muted)' }}>
-        Complexity
+    <div className="glass-panel rounded-xl p-6 flex flex-col gap-4">
+      <h3 className="label-caps pb-2" style={{ color: 'var(--primary)', borderBottom: '1px solid rgba(76, 70, 61, 0.3)', letterSpacing: '0.15em' }}>
+        COMPLEXITY ANALYSIS
       </h3>
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <div>
-          <span className="text-xs block mb-1" style={{ color: 'var(--text-muted)' }}>Best</span>
-          <span className="text-sm font-mono font-bold" style={{ color: 'var(--accent)' }}>{complexity.time.best}</span>
+
+      <div className="flex flex-col gap-1 mt-2">
+        <span className="text-sm" style={{ color: 'var(--on-surface-variant)' }}>Time Complexity</span>
+        <div className="flex items-end gap-2">
+          <span
+            className="text-[28px] font-medium"
+            style={{ color: 'var(--tertiary)', fontFamily: 'Sora, sans-serif', lineHeight: 1.2, letterSpacing: '-0.01em' }}
+          >
+            {complexity.time.average}
+          </span>
+          <span className="text-sm mb-1" style={{ color: 'var(--tertiary-fixed-dim)' }}>Average</span>
         </div>
-        <div>
-          <span className="text-xs block mb-1" style={{ color: 'var(--text-muted)' }}>Average</span>
-          <span className="text-sm font-mono font-bold" style={{ color: '#ffd080' }}>{complexity.time.average}</span>
-        </div>
-        <div>
-          <span className="text-xs block mb-1" style={{ color: 'var(--text-muted)' }}>Worst</span>
-          <span className="text-sm font-mono font-bold" style={{ color: 'var(--accent-red)' }}>{complexity.time.worst}</span>
-        </div>
-        <div>
-          <span className="text-xs block mb-1" style={{ color: 'var(--text-muted)' }}>Space</span>
-          <span className="text-sm font-mono font-bold" style={{ color: 'var(--accent-purple)' }}>{complexity.space}</span>
+      </div>
+
+      <div className="flex flex-col gap-1 mt-2">
+        <span className="text-sm" style={{ color: 'var(--on-surface-variant)' }}>Space Complexity</span>
+        <div className="flex items-end gap-2">
+          <span
+            className="text-[28px] font-medium"
+            style={{ color: 'var(--secondary)', fontFamily: 'Sora, sans-serif', lineHeight: 1.2, letterSpacing: '-0.01em' }}
+          >
+            {complexity.space}
+          </span>
+          <span className="text-sm mb-1" style={{ color: 'var(--secondary-fixed-dim)' }}>Auxiliary</span>
         </div>
       </div>
     </div>
