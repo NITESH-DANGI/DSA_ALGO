@@ -4,9 +4,9 @@ import { usePathname } from 'next/navigation'
 
 const NAV_LINKS = [
   { href: '/algorithms', label: 'Explore', matchPrefix: '/algorithms' },
-  { href: '#', label: 'Roadmap' },
+  { href: '/roadmap', label: 'Roadmap', matchPrefix: '/roadmap' },
   { href: '#', label: 'Community' },
-  { href: '#', label: 'Docs' },
+  { href: '/docs', label: 'Docs', matchPrefix: '/docs' },
   { href: '#', label: 'Live' },
 ]
 
