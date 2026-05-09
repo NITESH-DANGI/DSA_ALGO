@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { CATEGORIES } from '@/engine/registry'
 
 const CATEGORY_ICONS: Record<string, string> = {
-  sorting: 'reorder',
+  sorting: 'swap_vert',
   searching: 'search',
   graph: 'hub',
   tree: 'account_tree',
@@ -30,74 +30,87 @@ interface SidebarProps {
 export default function Sidebar({ activeCategory }: SidebarProps) {
   return (
     <aside
-      className="hidden lg:flex flex-col w-64 min-h-full border-r backdrop-blur-lg"
+      className="hidden lg:flex"
       style={{
-        background: 'rgba(26, 28, 32, 0.9)',
-        borderColor: 'rgba(255,255,255,0.05)',
-        boxShadow: '4px 0 20px rgba(0,0,0,0.3)',
+        width: '220px',
+        flexDirection: 'column',
+        flexShrink: 0,
+        borderRight: '1px solid rgba(255,255,255,0.05)',
+        background: 'rgba(26,28,32,0.85)',
+        backdropFilter: 'blur(12px)',
       }}
     >
       {/* Header */}
-      <div className="p-4 border-b mb-4" style={{ borderColor: 'rgba(255,255,255,0.05)' }}>
-        <h2 className="font-bold" style={{ color: 'var(--primary)', fontFamily: 'Sora, sans-serif', fontSize: '22px' }}>
+      <div style={{ padding: '16px 18px', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+        <h2 style={{ fontFamily: 'Sora, sans-serif', fontSize: '16px', fontWeight: 700, color: '#d7c4a6', letterSpacing: '-0.01em' }}>
           ALGO_CORE
         </h2>
-        <p className="mt-1 text-sm" style={{ color: 'var(--on-surface-variant)' }}>
+        <p style={{ fontFamily: 'Hanken Grotesk, sans-serif', fontSize: '11px', color: '#7a756e', marginTop: '2px' }}>
           v2.4.0 Active
         </p>
       </div>
 
-      {/* Category nav */}
-      <nav className="flex-1 flex flex-col gap-2 px-2">
+      {/* Nav */}
+      <nav style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '2px', padding: '12px 8px' }}>
         {CATEGORIES.map(cat => {
           const isActive = activeCategory === cat
           return (
             <Link
               key={cat}
               href={CATEGORY_LINKS[cat] || '#'}
-              className="flex items-center gap-3 p-2 rounded-lg transition-all"
               style={{
-                background: isActive ? 'rgba(51, 53, 57, 0.5)' : 'transparent',
-                color: isActive ? 'var(--on-secondary-container)' : 'var(--on-surface-variant)',
-                borderLeft: isActive ? '2px solid var(--on-secondary-container)' : '2px solid transparent',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+                padding: '8px 12px',
+                borderRadius: '8px',
+                textDecoration: 'none',
+                fontSize: '13px',
+                fontFamily: 'Sora, sans-serif',
+                fontWeight: 500,
+                color: isActive ? '#cfb58e' : '#7a756e',
+                background: isActive ? 'rgba(51,53,57,0.4)' : 'transparent',
+                borderLeft: isActive ? '2px solid #cfb58e' : '2px solid transparent',
+                transition: 'all 0.2s',
               }}
             >
-              <span className="material-symbols-outlined" style={{ fontSize: 20 }}>
+              <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>
                 {CATEGORY_ICONS[cat] || 'layers'}
               </span>
               {CATEGORY_LABELS[cat] || cat}
             </Link>
           )
         })}
-        {/* Extra categories */}
-        <Link href="#" className="flex items-center gap-3 p-2 transition-all" style={{ color: 'var(--on-surface-variant)' }}>
-          <span className="material-symbols-outlined" style={{ fontSize: 20 }}>layers</span>
+
+        <div style={{ height: '1px', background: 'rgba(255,255,255,0.04)', margin: '8px 12px' }} />
+
+        <Link href="#" style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '8px 12px', borderRadius: '8px', textDecoration: 'none', fontSize: '13px', fontFamily: 'Sora, sans-serif', fontWeight: 500, color: '#7a756e', borderLeft: '2px solid transparent' }}>
+          <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>layers</span>
           Dynamic
         </Link>
-        <Link href="#" className="flex items-center gap-3 p-2 transition-all" style={{ color: 'var(--on-surface-variant)' }}>
-          <span className="material-symbols-outlined" style={{ fontSize: 20 }}>psychology</span>
+        <Link href="#" style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '8px 12px', borderRadius: '8px', textDecoration: 'none', fontSize: '13px', fontFamily: 'Sora, sans-serif', fontWeight: 500, color: '#7a756e', borderLeft: '2px solid transparent' }}>
+          <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>psychology</span>
           Neural
         </Link>
       </nav>
 
-      {/* Bottom section */}
-      <div className="mt-auto p-4 flex flex-col gap-2 border-t" style={{ borderColor: 'rgba(255,255,255,0.05)' }}>
+      {/* Bottom */}
+      <div style={{ padding: '12px 10px', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
         <button
-          className="py-2 rounded-xl mb-4 text-center text-sm tactile-shadow"
           style={{
-            background: 'var(--surface-bright)',
-            color: 'var(--on-surface)',
+            width: '100%', padding: '8px 0', borderRadius: '8px', border: 'none', cursor: 'pointer',
+            background: 'rgba(55,57,62,0.6)', color: '#cfc5b9',
+            fontFamily: 'Sora, sans-serif', fontSize: '12px', fontWeight: 500,
+            marginBottom: '8px',
           }}
         >
           Advanced Modules
         </button>
-        <a href="#" className="flex items-center gap-3 p-2 text-sm transition-all hover:opacity-80" style={{ color: 'var(--on-surface-variant)' }}>
-          <span className="material-symbols-outlined" style={{ fontSize: 18 }}>settings</span>
-          Settings
+        <a href="#" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 12px', fontSize: '12px', color: '#7a756e', textDecoration: 'none', fontFamily: 'Hanken Grotesk, sans-serif' }}>
+          <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>settings</span>Settings
         </a>
-        <a href="#" className="flex items-center gap-3 p-2 text-sm transition-all hover:opacity-80" style={{ color: 'var(--on-surface-variant)' }}>
-          <span className="material-symbols-outlined" style={{ fontSize: 18 }}>help</span>
-          Support
+        <a href="#" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 12px', fontSize: '12px', color: '#7a756e', textDecoration: 'none', fontFamily: 'Hanken Grotesk, sans-serif' }}>
+          <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>help</span>Support
         </a>
       </div>
     </aside>

@@ -12,26 +12,19 @@ export default function StatePanel({ step }: StatePanelProps) {
 
   if (step.type === 'sort') {
     const s = step as SortStep
-    const activeIndices = Object.entries(s.states)
-      .filter(([, v]) => v === 'active')
-      .map(([k]) => Number(k))
-    const compareIndices = Object.entries(s.states)
-      .filter(([, v]) => v === 'compare')
-      .map(([k]) => Number(k))
-
+    const activeIndices = Object.entries(s.states).filter(([, v]) => v === 'active').map(([k]) => Number(k))
+    const compareIndices = Object.entries(s.states).filter(([, v]) => v === 'compare').map(([k]) => Number(k))
     if (activeIndices.length > 0) entries.push({ key: 'active', value: `[${activeIndices.join(', ')}]` })
     if (compareIndices.length > 0) entries.push({ key: 'compare', value: `[${compareIndices.join(', ')}]` })
     entries.push({ key: 'comparisons', value: String(s.comparisons) })
     entries.push({ key: 'swaps', value: String(s.swaps) })
   }
-
   if (step.type === 'graph') {
     const g = step as GraphStep
     if (g.activeNode) entries.push({ key: 'current', value: g.activeNode })
     if (g.frontier.length > 0) entries.push({ key: 'frontier', value: `[${g.frontier.join(', ')}]` })
     entries.push({ key: 'visited', value: String(g.visitedNodes.length) })
   }
-
   if (step.type === 'tree') {
     const t = step as TreeStep
     if (t.activeNode) entries.push({ key: 'node', value: t.activeNode })
@@ -42,15 +35,20 @@ export default function StatePanel({ step }: StatePanelProps) {
   if (entries.length === 0) return null
 
   return (
-    <div className="glass-panel rounded-xl p-6">
-      <h3 className="label-caps pb-2 mb-4" style={{ color: 'var(--primary)', borderBottom: '1px solid rgba(76, 70, 61, 0.3)', letterSpacing: '0.15em' }}>
+    <div className="glass-panel" style={{ borderRadius: '12px', padding: '18px' }}>
+      <h3 style={{
+        fontFamily: 'Hanken Grotesk, sans-serif', fontSize: '11px', fontWeight: 600,
+        letterSpacing: '0.12em', textTransform: 'uppercase', color: '#d7c4a6',
+        paddingBottom: '8px', marginBottom: '12px',
+        borderBottom: '1px solid rgba(76,70,61,0.3)',
+      }}>
         STATE
       </h3>
-      <div className="flex flex-col gap-3 text-sm" style={{ fontFamily: 'var(--font-space-mono), monospace' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
         {entries.map(({ key, value }) => (
-          <div key={key} className="flex justify-between">
-            <span style={{ color: 'var(--on-surface-variant)' }}>{key}</span>
-            <span style={{ color: 'var(--primary-fixed-dim)' }}>{value}</span>
+          <div key={key} style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--font-space-mono), monospace', fontSize: '12px' }}>
+            <span style={{ color: '#988f85' }}>{key}</span>
+            <span style={{ color: '#d7c4a6' }}>{value}</span>
           </div>
         ))}
       </div>

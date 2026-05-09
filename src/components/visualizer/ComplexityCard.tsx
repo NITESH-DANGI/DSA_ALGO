@@ -8,34 +8,35 @@ interface ComplexityCardProps {
 export default function ComplexityCard({ algo }: ComplexityCardProps) {
   const { complexity } = algo
   return (
-    <div className="glass-panel rounded-xl p-6 flex flex-col gap-4">
-      <h3 className="label-caps pb-2" style={{ color: 'var(--primary)', borderBottom: '1px solid rgba(76, 70, 61, 0.3)', letterSpacing: '0.15em' }}>
+    <div
+      className="glass-panel"
+      style={{ borderRadius: '12px', padding: '18px', display: 'flex', flexDirection: 'column', gap: '16px' }}
+    >
+      <h3 style={{
+        fontFamily: 'Hanken Grotesk, sans-serif', fontSize: '11px', fontWeight: 600,
+        letterSpacing: '0.12em', textTransform: 'uppercase', color: '#d7c4a6',
+        paddingBottom: '8px', borderBottom: '1px solid rgba(76,70,61,0.3)',
+      }}>
         COMPLEXITY ANALYSIS
       </h3>
 
-      <div className="flex flex-col gap-1 mt-2">
-        <span className="text-sm" style={{ color: 'var(--on-surface-variant)' }}>Time Complexity</span>
-        <div className="flex items-end gap-2">
-          <span
-            className="text-[28px] font-medium"
-            style={{ color: 'var(--tertiary)', fontFamily: 'Sora, sans-serif', lineHeight: 1.2, letterSpacing: '-0.01em' }}
-          >
+      <div>
+        <span style={{ fontFamily: 'Hanken Grotesk, sans-serif', fontSize: '12px', color: '#988f85' }}>Time Complexity</span>
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginTop: '4px' }}>
+          <span style={{ fontFamily: 'Sora, sans-serif', fontSize: '24px', fontWeight: 500, color: '#d5e7ca', letterSpacing: '-0.01em' }}>
             {complexity.time.average}
           </span>
-          <span className="text-sm mb-1" style={{ color: 'var(--tertiary-fixed-dim)' }}>Average</span>
+          <span style={{ fontFamily: 'Hanken Grotesk, sans-serif', fontSize: '12px', color: '#baccb0' }}>Average</span>
         </div>
       </div>
 
-      <div className="flex flex-col gap-1 mt-2">
-        <span className="text-sm" style={{ color: 'var(--on-surface-variant)' }}>Space Complexity</span>
-        <div className="flex items-end gap-2">
-          <span
-            className="text-[28px] font-medium"
-            style={{ color: 'var(--secondary)', fontFamily: 'Sora, sans-serif', lineHeight: 1.2, letterSpacing: '-0.01em' }}
-          >
+      <div>
+        <span style={{ fontFamily: 'Hanken Grotesk, sans-serif', fontSize: '12px', color: '#988f85' }}>Space Complexity</span>
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginTop: '4px' }}>
+          <span style={{ fontFamily: 'Sora, sans-serif', fontSize: '24px', fontWeight: 500, color: '#dec39b', letterSpacing: '-0.01em' }}>
             {complexity.space}
           </span>
-          <span className="text-sm mb-1" style={{ color: 'var(--secondary-fixed-dim)' }}>Auxiliary</span>
+          <span style={{ fontFamily: 'Hanken Grotesk, sans-serif', fontSize: '12px', color: '#dec39b', opacity: 0.7 }}>Auxiliary</span>
         </div>
       </div>
     </div>

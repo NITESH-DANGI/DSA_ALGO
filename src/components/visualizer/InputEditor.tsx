@@ -8,25 +8,61 @@ interface InputEditorProps {
   onSubmit: (input: string) => void
 }
 
+/* Shared button style */
+const ghostBtn: React.CSSProperties = {
+  display: 'inline-flex', alignItems: 'center', gap: '4px',
+  padding: '5px 12px', borderRadius: '8px', border: '1px solid rgba(243,223,192,0.1)',
+  background: 'rgba(243,223,192,0.04)', color: '#988f85', cursor: 'pointer',
+  fontFamily: 'Hanken Grotesk, sans-serif', fontSize: '11px', fontWeight: 600,
+  letterSpacing: '0.04em', transition: 'all 0.2s',
+}
+
+const primaryBtn: React.CSSProperties = {
+  width: '100%', padding: '10px 0', borderRadius: '10px',
+  border: 'none', cursor: 'pointer',
+  background: 'linear-gradient(135deg, rgba(215,196,166,0.15), rgba(243,223,192,0.08))',
+  color: '#d7c4a6',
+  fontFamily: 'Sora, sans-serif', fontSize: '13px', fontWeight: 500,
+  boxShadow: 'inset 0 0 0 1px rgba(243,223,192,0.12)',
+  transition: 'all 0.2s',
+}
+
+const chipStyle: React.CSSProperties = {
+  display: 'inline-flex', alignItems: 'center', gap: '4px',
+  padding: '3px 10px', borderRadius: '6px',
+  background: 'rgba(215,196,166,0.15)', color: '#d7c4a6',
+  fontFamily: 'var(--font-space-mono), monospace', fontSize: '12px', fontWeight: 600,
+  border: '1px solid rgba(243,223,192,0.1)',
+}
+
+const inputFieldStyle: React.CSSProperties = {
+  flex: 1, minWidth: '80px', background: 'transparent', outline: 'none',
+  border: 'none', color: '#e2e2e8',
+  fontFamily: 'var(--font-space-mono), monospace', fontSize: '12px',
+}
+
+const fieldBoxStyle: React.CSSProperties = {
+  display: 'flex', flexWrap: 'wrap' as const, alignItems: 'center', gap: '6px',
+  borderRadius: '8px', padding: '8px 10px',
+  background: 'rgba(12,14,18,0.6)', border: '1px solid rgba(243,223,192,0.08)',
+  minHeight: '40px',
+}
+
+const labelStyle: React.CSSProperties = {
+  fontFamily: 'Hanken Grotesk, sans-serif', fontSize: '11px', fontWeight: 600,
+  letterSpacing: '0.08em', textTransform: 'uppercase' as const, color: '#7a756e',
+  marginBottom: '4px', display: 'block',
+}
+
 export default function InputEditor({ algo, onSubmit }: InputEditorProps) {
   const category = algo.category
-
-  if (category === 'sorting' || category === 'tree') {
-    return <NumberListInput algo={algo} onSubmit={onSubmit} />
-  }
-  if (category === 'searching') {
-    return <SearchInput algo={algo} onSubmit={onSubmit} />
-  }
-  if (category === 'graph') {
-    return <GraphInput algo={algo} onSubmit={onSubmit} />
-  }
-
+  if (category === 'sorting' || category === 'tree') return <NumberListInput algo={algo} onSubmit={onSubmit} />
+  if (category === 'searching') return <SearchInput algo={algo} onSubmit={onSubmit} />
+  if (category === 'graph') return <GraphInput algo={algo} onSubmit={onSubmit} />
   return <FallbackInput algo={algo} onSubmit={onSubmit} />
 }
 
-/* ─────────────────────────────────────────────
-   SORTING / TREE — Comma-separated number chips
-   ───────────────────────────────────────────── */
+/* ── SORTING / TREE ── */
 function NumberListInput({ algo, onSubmit }: InputEditorProps) {
   const defaultNums = parseDefaultNumbers(algo)
   const [numbers, setNumbers] = useState<number[]>(defaultNums)
@@ -46,142 +82,79 @@ function NumberListInput({ algo, onSubmit }: InputEditorProps) {
     if (valid.length === 0) return
     const combined = [...numbers, ...valid]
     if (combined.length > 30) { setError('Max 30 numbers allowed'); return }
-    setNumbers(combined)
-    setInputVal('')
-    setError(null)
+    setNumbers(combined); setInputVal(''); setError(null)
   }
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' || e.key === ',') {
-      e.preventDefault()
-      if (inputVal.trim()) addNumbers(inputVal)
-    }
-    if (e.key === 'Backspace' && inputVal === '' && numbers.length > 0) {
-      setNumbers(numbers.slice(0, -1))
-    }
+    if (e.key === 'Enter' || e.key === ',') { e.preventDefault(); if (inputVal.trim()) addNumbers(inputVal) }
+    if (e.key === 'Backspace' && inputVal === '' && numbers.length > 0) setNumbers(numbers.slice(0, -1))
   }
 
-  const removeNumber = (index: number) => {
-    setNumbers(numbers.filter((_, i) => i !== index))
-    setError(null)
-  }
+  const removeNumber = (index: number) => { setNumbers(numbers.filter((_, i) => i !== index)); setError(null) }
 
   const handleSubmit = () => {
     if (numbers.length < 2) { setError('Add at least 2 numbers'); return }
-    setError(null)
-    onSubmit(JSON.stringify(numbers))
+    setError(null); onSubmit(JSON.stringify(numbers))
   }
 
   const handleRandom = () => {
     const arr = algo.category === 'tree' ? randomTreeValues(7) : randomArray(10)
-    setNumbers(arr)
-    setError(null)
-    onSubmit(JSON.stringify(arr))
-  }
-
-  const handleClear = () => {
-    setNumbers([])
-    setInputVal('')
-    setError(null)
+    setNumbers(arr); setError(null); onSubmit(JSON.stringify(arr))
   }
 
   return (
-    <div className="rounded-xl border p-4" style={{ background: 'var(--surface)', borderColor: 'var(--border)' }}>
+    <div style={{ borderRadius: '12px', border: '1px solid rgba(243,223,192,0.08)', background: 'rgba(26,28,32,0.5)', padding: '14px 16px' }}>
       {/* Header */}
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-2">
-          <span style={{ fontSize: 16 }}>📊</span>
-          <h3 className="text-xs font-bold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
-            Enter Your Numbers
-          </h3>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span className="material-symbols-outlined" style={{ fontSize: '16px', color: '#d7c4a6' }}>bar_chart</span>
+          <span style={{ ...labelStyle, marginBottom: 0 }}>Enter Your Numbers</span>
         </div>
-        <div className="flex gap-2">
-          <button
-            onClick={handleClear}
-            className="text-xs font-mono px-3 py-1 rounded transition-all hover:scale-105"
-            style={{ background: 'var(--surface-2)', color: 'var(--text-muted)', border: '1px solid var(--border)' }}
-          >
-            ✕ Clear
-          </button>
-          <button
-            onClick={handleRandom}
-            className="text-xs font-mono px-3 py-1 rounded transition-all hover:scale-105"
-            style={{ background: 'var(--tag-bg)', color: 'var(--accent)', border: '1px solid var(--border)' }}
-          >
-            🎲 Random
-          </button>
+        <div style={{ display: 'flex', gap: '6px' }}>
+          <button onClick={() => { setNumbers([]); setInputVal(''); setError(null) }} style={ghostBtn}>✕ Clear</button>
+          <button onClick={handleRandom} style={{ ...ghostBtn, color: '#d7c4a6', borderColor: 'rgba(243,223,192,0.15)' }}>🎲 Random</button>
         </div>
       </div>
 
-      {/* Number chips + input */}
-      <div
-        className="flex flex-wrap items-center gap-2 rounded-lg p-3 cursor-text"
-        style={{
-          background: 'var(--code-bg)',
-          border: `1px solid ${error ? 'var(--accent-red)' : 'var(--border)'}`,
-          minHeight: 52,
-        }}
-        onClick={() => inputRef.current?.focus()}
-      >
+      {/* Chips + input */}
+      <div style={{ ...fieldBoxStyle, borderColor: error ? '#C45C5C' : 'rgba(243,223,192,0.08)' }} onClick={() => inputRef.current?.focus()}>
         {numbers.map((num, i) => (
-          <span
-            key={i}
-            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-sm font-mono font-bold transition-all chip-pop"
-            style={{
-              background: 'var(--accent)',
-              color: 'var(--bg)',
-            }}
-          >
+          <span key={i} style={chipStyle}>
             {num}
-            <button
-              onClick={(e) => { e.stopPropagation(); removeNumber(i) }}
-              className="ml-0.5 opacity-70 hover:opacity-100 text-xs leading-none"
-              style={{ color: 'var(--bg)' }}
-            >
-              ×
-            </button>
+            <button onClick={e => { e.stopPropagation(); removeNumber(i) }} style={{ background: 'none', border: 'none', color: '#988f85', cursor: 'pointer', fontSize: '12px', lineHeight: 1, padding: 0 }}>×</button>
           </span>
         ))}
         <input
-          ref={inputRef}
-          value={inputVal}
+          ref={inputRef} value={inputVal}
           onChange={e => { setInputVal(e.target.value); setError(null) }}
           onKeyDown={handleKeyDown}
           onBlur={() => { if (inputVal.trim()) addNumbers(inputVal) }}
           placeholder={numbers.length === 0 ? 'Type numbers separated by commas…' : 'Add more…'}
-          className="flex-1 min-w-[120px] bg-transparent outline-none text-sm font-mono"
-          style={{ color: 'var(--text)' }}
+          style={inputFieldStyle}
         />
       </div>
 
-      {/* Help text */}
-      <div className="flex items-center justify-between mt-2">
-        <p className="text-xs" style={{ color: error ? 'var(--accent-red)' : 'var(--text-muted)' }}>
+      {/* Help / error */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '6px' }}>
+        <span style={{ fontSize: '10px', color: error ? '#C45C5C' : '#7a756e', fontFamily: 'Hanken Grotesk, sans-serif' }}>
           {error || `${numbers.length}/30 numbers · Press Enter or comma to add`}
-        </p>
-        <span className="text-xs font-mono" style={{ color: 'var(--text-muted)' }}>
-          {numbers.length > 0 && `[${numbers.join(', ')}]`}
         </span>
+        {numbers.length > 0 && (
+          <span style={{ fontSize: '10px', color: '#7a756e', fontFamily: 'var(--font-space-mono), monospace' }}>
+            [{numbers.join(', ')}]
+          </span>
+        )}
       </div>
 
       {/* Submit */}
-      <button
-        onClick={handleSubmit}
-        disabled={numbers.length < 2}
-        className="mt-3 w-full py-2.5 rounded-lg text-sm font-bold transition-all hover:scale-[1.02] active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed"
-        style={{ background: 'var(--accent)', color: 'var(--bg)' }}
-      >
+      <button onClick={handleSubmit} disabled={numbers.length < 2} style={{ ...primaryBtn, marginTop: '10px', opacity: numbers.length < 2 ? 0.4 : 1 }}>
         ▶ Visualize with {numbers.length} Number{numbers.length !== 1 ? 's' : ''} →
       </button>
-
-
     </div>
   )
 }
 
-/* ─────────────────────────────────────────────
-   SEARCHING — Array + Target
-   ───────────────────────────────────────────── */
+/* ── SEARCHING ── */
 function SearchInput({ algo, onSubmit }: InputEditorProps) {
   const defaults = parseSearchDefaults(algo)
   const [numbers, setNumbers] = useState<number[]>(defaults.array)
@@ -193,141 +166,72 @@ function SearchInput({ algo, onSubmit }: InputEditorProps) {
   const addNumbers = (raw: string) => {
     const parts = raw.split(/[\s,]+/).filter(Boolean)
     const valid: number[] = []
-    for (const p of parts) {
-      const n = Number(p)
-      if (isNaN(n)) { setError(`"${p}" is not valid`); return }
-      valid.push(Math.round(n))
-    }
+    for (const p of parts) { const n = Number(p); if (isNaN(n)) { setError(`"${p}" is not valid`); return }; valid.push(Math.round(n)) }
     if (valid.length === 0) return
     const combined = [...numbers, ...valid]
     if (combined.length > 30) { setError('Max 30 numbers'); return }
-    setNumbers(combined)
-    setInputVal('')
-    setError(null)
+    setNumbers(combined); setInputVal(''); setError(null)
   }
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' || e.key === ',') {
-      e.preventDefault()
-      if (inputVal.trim()) addNumbers(inputVal)
-    }
-    if (e.key === 'Backspace' && inputVal === '' && numbers.length > 0) {
-      setNumbers(numbers.slice(0, -1))
-    }
+    if (e.key === 'Enter' || e.key === ',') { e.preventDefault(); if (inputVal.trim()) addNumbers(inputVal) }
+    if (e.key === 'Backspace' && inputVal === '' && numbers.length > 0) setNumbers(numbers.slice(0, -1))
   }
 
-  const removeNumber = (index: number) => {
-    setNumbers(numbers.filter((_, i) => i !== index))
-  }
+  const removeNumber = (index: number) => setNumbers(numbers.filter((_, i) => i !== index))
 
   const handleSubmit = () => {
     if (numbers.length < 2) { setError('Add at least 2 numbers'); return }
-    const t = Number(target)
-    if (isNaN(t)) { setError('Target must be a number'); return }
-    setError(null)
-    const sorted = [...numbers].sort((a, b) => a - b)
+    const t = Number(target); if (isNaN(t)) { setError('Target must be a number'); return }
+    setError(null); const sorted = [...numbers].sort((a, b) => a - b)
     onSubmit(JSON.stringify({ array: sorted, target: t }))
   }
 
   const handleRandom = () => {
     const arr = randomArray(8).sort((a, b) => a - b)
     const t = arr[Math.floor(Math.random() * arr.length)]
-    setNumbers(arr)
-    setTarget(String(t))
-    setError(null)
+    setNumbers(arr); setTarget(String(t)); setError(null)
     onSubmit(JSON.stringify({ array: arr, target: t }))
   }
 
   return (
-    <div className="rounded-xl border p-4" style={{ background: 'var(--surface)', borderColor: 'var(--border)' }}>
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-2">
-          <span style={{ fontSize: 16 }}>🔍</span>
-          <h3 className="text-xs font-bold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
-            Search Input
-          </h3>
+    <div style={{ borderRadius: '12px', border: '1px solid rgba(243,223,192,0.08)', background: 'rgba(26,28,32,0.5)', padding: '14px 16px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span className="material-symbols-outlined" style={{ fontSize: '16px', color: '#d7c4a6' }}>search</span>
+          <span style={{ ...labelStyle, marginBottom: 0 }}>Search Input</span>
         </div>
-        <button
-          onClick={handleRandom}
-          className="text-xs font-mono px-3 py-1 rounded transition-all hover:scale-105"
-          style={{ background: 'var(--tag-bg)', color: 'var(--accent)', border: '1px solid var(--border)' }}
-        >
-          🎲 Random
-        </button>
+        <button onClick={handleRandom} style={{ ...ghostBtn, color: '#d7c4a6' }}>🎲 Random</button>
       </div>
 
-      {/* Array input */}
-      <label className="block text-xs font-mono mb-1.5" style={{ color: 'var(--text-muted)' }}>Array values</label>
-      <div
-        className="flex flex-wrap items-center gap-2 rounded-lg p-3 cursor-text mb-3"
-        style={{
-          background: 'var(--code-bg)',
-          border: `1px solid var(--border)`,
-          minHeight: 48,
-        }}
-        onClick={() => inputRef.current?.focus()}
-      >
+      <span style={labelStyle}>Array values</span>
+      <div style={{ ...fieldBoxStyle, marginBottom: '10px' }} onClick={() => inputRef.current?.focus()}>
         {numbers.map((num, i) => (
-          <span
-            key={i}
-            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-sm font-mono font-bold"
-            style={{ background: 'var(--accent)', color: 'var(--bg)' }}
-          >
+          <span key={i} style={chipStyle}>
             {num}
-            <button
-              onClick={(e) => { e.stopPropagation(); removeNumber(i) }}
-              className="ml-0.5 opacity-70 hover:opacity-100 text-xs leading-none"
-              style={{ color: 'var(--bg)' }}
-            >
-              ×
-            </button>
+            <button onClick={e => { e.stopPropagation(); removeNumber(i) }} style={{ background: 'none', border: 'none', color: '#988f85', cursor: 'pointer', fontSize: '12px', padding: 0 }}>×</button>
           </span>
         ))}
-        <input
-          ref={inputRef}
-          value={inputVal}
-          onChange={e => { setInputVal(e.target.value); setError(null) }}
-          onKeyDown={handleKeyDown}
-          onBlur={() => { if (inputVal.trim()) addNumbers(inputVal) }}
-          placeholder={numbers.length === 0 ? 'Type numbers…' : 'Add…'}
-          className="flex-1 min-w-[80px] bg-transparent outline-none text-sm font-mono"
-          style={{ color: 'var(--text)' }}
-        />
+        <input ref={inputRef} value={inputVal} onChange={e => { setInputVal(e.target.value); setError(null) }} onKeyDown={handleKeyDown} onBlur={() => { if (inputVal.trim()) addNumbers(inputVal) }} placeholder={numbers.length === 0 ? 'Type numbers…' : 'Add…'} style={inputFieldStyle} />
       </div>
 
-      {/* Target input */}
-      <label className="block text-xs font-mono mb-1.5" style={{ color: 'var(--text-muted)' }}>Target value to find</label>
+      <span style={labelStyle}>Target value</span>
       <input
-        value={target}
-        onChange={e => { setTarget(e.target.value); setError(null) }}
-        placeholder="Enter target number…"
-        className="w-full rounded-lg p-3 text-sm font-mono border outline-none mb-1"
-        style={{
-          background: 'var(--code-bg)',
-          color: 'var(--accent)',
-          borderColor: 'var(--border)',
-          fontWeight: 'bold',
-          fontSize: 16,
-        }}
+        value={target} onChange={e => { setTarget(e.target.value); setError(null) }}
+        placeholder="Enter target…"
+        style={{ ...inputFieldStyle, width: '100%', padding: '8px 10px', borderRadius: '8px', background: 'rgba(12,14,18,0.6)', border: '1px solid rgba(243,223,192,0.08)', color: '#d7c4a6', fontWeight: 700, fontSize: '14px', flex: 'none' }}
       />
 
-      {error && <p className="text-xs mt-1" style={{ color: 'var(--accent-red)' }}>{error}</p>}
+      {error && <p style={{ fontSize: '10px', color: '#C45C5C', marginTop: '6px' }}>{error}</p>}
 
-      <button
-        onClick={handleSubmit}
-        disabled={numbers.length < 2}
-        className="mt-3 w-full py-2.5 rounded-lg text-sm font-bold transition-all hover:scale-[1.02] active:scale-95 disabled:opacity-40"
-        style={{ background: 'var(--accent)', color: 'var(--bg)' }}
-      >
+      <button onClick={handleSubmit} disabled={numbers.length < 2} style={{ ...primaryBtn, marginTop: '10px', opacity: numbers.length < 2 ? 0.4 : 1 }}>
         🔎 Search for {target || '?'} →
       </button>
     </div>
   )
 }
 
-/* ─────────────────────────────────────────────
-   GRAPH — Node/Edge Builder
-   ───────────────────────────────────────────── */
+/* ── GRAPH ── */
 function GraphInput({ algo, onSubmit }: InputEditorProps) {
   const defaults = parseGraphDefaults(algo)
   const [graph, setGraph] = useState<Record<string, string[]>>(defaults.graph)
@@ -343,247 +247,135 @@ function GraphInput({ algo, onSubmit }: InputEditorProps) {
     const name = newNode.trim().toUpperCase()
     if (!name) return
     if (name.length > 3) { setError('Node name max 3 chars'); return }
-    if (graph[name]) { setError(`Node "${name}" already exists`); return }
+    if (graph[name]) { setError(`Node "${name}" exists`); return }
     if (nodes.length >= 12) { setError('Max 12 nodes'); return }
-    setGraph({ ...graph, [name]: [] })
-    setNewNode('')
-    setError(null)
+    setGraph({ ...graph, [name]: [] }); setNewNode(''); setError(null)
     if (nodes.length === 0) setStartNode(name)
   }
 
   const removeNode = (name: string) => {
-    const next = { ...graph }
-    delete next[name]
-    // Remove edges referencing this node
-    for (const key of Object.keys(next)) {
-      next[key] = next[key].filter(n => n !== name)
-    }
-    setGraph(next)
-    if (startNode === name) setStartNode(Object.keys(next)[0] || '')
+    const next = { ...graph }; delete next[name]
+    for (const key of Object.keys(next)) next[key] = next[key].filter(n => n !== name)
+    setGraph(next); if (startNode === name) setStartNode(Object.keys(next)[0] || '')
   }
 
   const addEdge = () => {
-    if (!edgeFrom || !edgeTo) { setError('Select both nodes for edge'); return }
-    if (edgeFrom === edgeTo) { setError('Cannot connect node to itself'); return }
-    if (graph[edgeFrom]?.includes(edgeTo)) { setError('Edge already exists'); return }
+    if (!edgeFrom || !edgeTo) { setError('Select both nodes'); return }
+    if (edgeFrom === edgeTo) { setError('Cannot self-connect'); return }
+    if (graph[edgeFrom]?.includes(edgeTo)) { setError('Edge exists'); return }
     const next = { ...graph }
     next[edgeFrom] = [...(next[edgeFrom] || []), edgeTo]
     next[edgeTo] = [...(next[edgeTo] || []), edgeFrom]
-    setGraph(next)
-    setError(null)
+    setGraph(next); setError(null)
   }
 
   const handleSubmit = () => {
     if (nodes.length < 2) { setError('Need at least 2 nodes'); return }
-    setError(null)
-    onSubmit(JSON.stringify({ graph, start: startNode || nodes[0] }))
+    setError(null); onSubmit(JSON.stringify({ graph, start: startNode || nodes[0] }))
   }
 
   const handleRandom = () => {
-    const g = randomGraph()
-    setGraph(g)
-    setStartNode(Object.keys(g)[0])
-    setError(null)
+    const g = randomGraph(); setGraph(g); setStartNode(Object.keys(g)[0]); setError(null)
     onSubmit(JSON.stringify({ graph: g, start: Object.keys(g)[0] }))
   }
 
+  const selectStyle: React.CSSProperties = {
+    flex: 1, padding: '6px 10px', borderRadius: '8px',
+    background: 'rgba(12,14,18,0.6)', border: '1px solid rgba(243,223,192,0.08)',
+    color: '#e2e2e8', fontFamily: 'var(--font-space-mono), monospace', fontSize: '12px',
+    outline: 'none',
+  }
+
   return (
-    <div className="rounded-xl border p-4" style={{ background: 'var(--surface)', borderColor: 'var(--border)' }}>
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-2">
-          <span style={{ fontSize: 16 }}>🕸️</span>
-          <h3 className="text-xs font-bold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
-            Build Your Graph
-          </h3>
+    <div style={{ borderRadius: '12px', border: '1px solid rgba(243,223,192,0.08)', background: 'rgba(26,28,32,0.5)', padding: '14px 16px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span className="material-symbols-outlined" style={{ fontSize: '16px', color: '#d7c4a6' }}>hub</span>
+          <span style={{ ...labelStyle, marginBottom: 0 }}>Build Your Graph</span>
         </div>
-        <button
-          onClick={handleRandom}
-          className="text-xs font-mono px-3 py-1 rounded transition-all hover:scale-105"
-          style={{ background: 'var(--tag-bg)', color: 'var(--accent)', border: '1px solid var(--border)' }}
-        >
-          🎲 Random
-        </button>
+        <button onClick={handleRandom} style={{ ...ghostBtn, color: '#d7c4a6' }}>🎲 Random</button>
       </div>
 
-      {/* Nodes section */}
-      <div className="mb-3">
-        <label className="block text-xs font-mono mb-1.5" style={{ color: 'var(--text-muted)' }}>Nodes</label>
-        <div className="flex flex-wrap items-center gap-2 mb-2">
-          {nodes.map(n => (
-            <span
-              key={n}
-              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-sm font-mono font-bold"
-              style={{
-                background: n === startNode ? 'var(--accent)' : 'var(--surface-2)',
-                color: n === startNode ? 'var(--bg)' : 'var(--text)',
-                border: `1px solid ${n === startNode ? 'var(--accent)' : 'var(--border)'}`,
-                cursor: 'pointer',
-              }}
-              onClick={() => setStartNode(n)}
-              title="Click to set as start node"
-            >
-              {n}
-              {n === startNode && <span className="text-[10px] ml-0.5">▸</span>}
-              <button
-                onClick={(e) => { e.stopPropagation(); removeNode(n) }}
-                className="ml-0.5 opacity-60 hover:opacity-100 text-xs leading-none"
-              >
-                ×
-              </button>
+      {/* Nodes */}
+      <span style={labelStyle}>Nodes</span>
+      <div style={{ display: 'flex', flexWrap: 'wrap' as const, gap: '6px', marginBottom: '8px' }}>
+        {nodes.map(n => (
+          <span key={n} onClick={() => setStartNode(n)} title="Click to set start"
+            style={{ ...chipStyle, cursor: 'pointer', background: n === startNode ? 'rgba(215,196,166,0.2)' : 'rgba(215,196,166,0.08)', borderColor: n === startNode ? 'rgba(243,223,192,0.2)' : 'rgba(243,223,192,0.08)' }}>
+            {n}{n === startNode && <span style={{ fontSize: '10px', color: '#d7c4a6' }}>▸</span>}
+            <button onClick={e => { e.stopPropagation(); removeNode(n) }} style={{ background: 'none', border: 'none', color: '#7a756e', cursor: 'pointer', fontSize: '12px', padding: 0 }}>×</button>
+          </span>
+        ))}
+      </div>
+      <div style={{ display: 'flex', gap: '6px', marginBottom: '10px' }}>
+        <input value={newNode} onChange={e => setNewNode(e.target.value.toUpperCase())} onKeyDown={e => { if (e.key === 'Enter') addNode() }} placeholder="Node (e.g. A)" maxLength={3}
+          style={{ ...inputFieldStyle, flex: 1, padding: '6px 10px', borderRadius: '8px', background: 'rgba(12,14,18,0.6)', border: '1px solid rgba(243,223,192,0.08)' }} />
+        <button onClick={addNode} style={ghostBtn}>+ Add</button>
+      </div>
+
+      {/* Edges */}
+      <span style={labelStyle}>Edges ({Object.values(graph).reduce((a, b) => a + b.length, 0) / 2})</span>
+      <div style={{ display: 'flex', gap: '6px', alignItems: 'center', marginBottom: '6px' }}>
+        <select value={edgeFrom} onChange={e => setEdgeFrom(e.target.value)} style={selectStyle}>
+          <option value="">From…</option>
+          {nodes.map(n => <option key={n} value={n}>{n}</option>)}
+        </select>
+        <span style={{ color: '#7a756e', fontSize: '12px' }}>↔</span>
+        <select value={edgeTo} onChange={e => setEdgeTo(e.target.value)} style={selectStyle}>
+          <option value="">To…</option>
+          {nodes.filter(n => n !== edgeFrom).map(n => <option key={n} value={n}>{n}</option>)}
+        </select>
+        <button onClick={addEdge} style={ghostBtn}>+ Edge</button>
+      </div>
+      {nodes.length > 0 && (
+        <div style={{ display: 'flex', flexWrap: 'wrap' as const, gap: '4px', marginBottom: '8px' }}>
+          {nodes.map(n => graph[n].filter(nbr => n < nbr).map(nbr => (
+            <span key={`${n}-${nbr}`} style={{ fontSize: '10px', padding: '2px 8px', borderRadius: '4px', background: 'rgba(30,32,36,0.8)', color: '#7a756e', fontFamily: 'var(--font-space-mono), monospace' }}>
+              {n}—{nbr}
             </span>
-          ))}
+          )))}
         </div>
-        <div className="flex gap-2">
-          <input
-            value={newNode}
-            onChange={e => setNewNode(e.target.value.toUpperCase())}
-            onKeyDown={e => { if (e.key === 'Enter') addNode() }}
-            placeholder="Node name (e.g. A)"
-            maxLength={3}
-            className="flex-1 rounded-lg px-3 py-2 text-sm font-mono border outline-none"
-            style={{ background: 'var(--code-bg)', color: 'var(--text)', borderColor: 'var(--border)' }}
-          />
-          <button
-            onClick={addNode}
-            className="px-4 py-2 rounded-lg text-sm font-bold transition-all hover:scale-105"
-            style={{ background: 'var(--surface-2)', color: 'var(--accent)', border: '1px solid var(--border)' }}
-          >
-            + Add
-          </button>
-        </div>
-      </div>
+      )}
 
-      {/* Edges section */}
-      <div className="mb-3">
-        <label className="block text-xs font-mono mb-1.5" style={{ color: 'var(--text-muted)' }}>
-          Edges ({Object.values(graph).reduce((a, b) => a + b.length, 0) / 2} connections)
-        </label>
-        <div className="flex gap-2 items-center">
-          <select
-            value={edgeFrom}
-            onChange={e => setEdgeFrom(e.target.value)}
-            className="flex-1 rounded-lg px-3 py-2 text-sm font-mono border outline-none"
-            style={{ background: 'var(--code-bg)', color: 'var(--text)', borderColor: 'var(--border)' }}
-          >
-            <option value="">From…</option>
-            {nodes.map(n => <option key={n} value={n}>{n}</option>)}
-          </select>
-          <span className="font-mono text-sm" style={{ color: 'var(--text-muted)' }}>↔</span>
-          <select
-            value={edgeTo}
-            onChange={e => setEdgeTo(e.target.value)}
-            className="flex-1 rounded-lg px-3 py-2 text-sm font-mono border outline-none"
-            style={{ background: 'var(--code-bg)', color: 'var(--text)', borderColor: 'var(--border)' }}
-          >
-            <option value="">To…</option>
-            {nodes.filter(n => n !== edgeFrom).map(n => <option key={n} value={n}>{n}</option>)}
-          </select>
-          <button
-            onClick={addEdge}
-            className="px-4 py-2 rounded-lg text-sm font-bold transition-all hover:scale-105"
-            style={{ background: 'var(--surface-2)', color: 'var(--accent)', border: '1px solid var(--border)' }}
-          >
-            + Edge
-          </button>
-        </div>
+      {error && <p style={{ fontSize: '10px', color: '#C45C5C', marginTop: '4px', marginBottom: '4px' }}>{error}</p>}
 
-        {/* Edge list preview */}
-        {nodes.length > 0 && (
-          <div className="mt-2 flex flex-wrap gap-1.5">
-            {nodes.map(n =>
-              graph[n].filter(nbr => n < nbr).map(nbr => (
-                <span key={`${n}-${nbr}`} className="text-xs font-mono px-2 py-0.5 rounded" style={{ background: 'var(--surface-2)', color: 'var(--text-muted)' }}>
-                  {n}—{nbr}
-                </span>
-              ))
-            )}
-          </div>
-        )}
-      </div>
-
-      {error && <p className="text-xs mt-1 mb-2" style={{ color: 'var(--accent-red)' }}>{error}</p>}
-
-      <button
-        onClick={handleSubmit}
-        disabled={nodes.length < 2}
-        className="w-full py-2.5 rounded-lg text-sm font-bold transition-all hover:scale-[1.02] active:scale-95 disabled:opacity-40"
-        style={{ background: 'var(--accent)', color: 'var(--bg)' }}
-      >
+      <button onClick={handleSubmit} disabled={nodes.length < 2} style={{ ...primaryBtn, marginTop: '6px', opacity: nodes.length < 2 ? 0.4 : 1 }}>
         ▶ Visualize Graph ({nodes.length} nodes) →
       </button>
     </div>
   )
 }
 
-/* ─────────────────────────────────────────────
-   FALLBACK — Raw JSON
-   ───────────────────────────────────────────── */
+/* ── FALLBACK ── */
 function FallbackInput({ algo, onSubmit }: InputEditorProps) {
   const [input, setInput] = useState(algo.defaultInput)
   const [error, setError] = useState<string | null>(null)
 
   const handleSubmit = () => {
-    try {
-      JSON.parse(input)
-      setError(null)
-      onSubmit(input)
-    } catch {
-      setError('Invalid JSON')
-    }
+    try { JSON.parse(input); setError(null); onSubmit(input) } catch { setError('Invalid JSON') }
   }
 
   return (
-    <div className="rounded-xl border p-4" style={{ background: 'var(--surface)', borderColor: 'var(--border)' }}>
-      <h3 className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: 'var(--text-muted)' }}>
-        Custom Input
-      </h3>
+    <div style={{ borderRadius: '12px', border: '1px solid rgba(243,223,192,0.08)', background: 'rgba(26,28,32,0.5)', padding: '14px 16px' }}>
+      <span style={{ ...labelStyle, marginBottom: '8px' }}>Custom Input</span>
       <textarea
-        value={input}
-        onChange={e => { setInput(e.target.value); setError(null) }}
-        className="w-full rounded-lg p-3 text-sm font-mono resize-none border outline-none"
-        style={{
-          background: 'var(--code-bg)',
-          color: 'var(--text)',
-          borderColor: error ? 'var(--accent-red)' : 'var(--border)',
-          minHeight: 80,
-        }}
+        value={input} onChange={e => { setInput(e.target.value); setError(null) }}
+        style={{ width: '100%', minHeight: '60px', padding: '8px 10px', borderRadius: '8px', background: 'rgba(12,14,18,0.6)', border: `1px solid ${error ? '#C45C5C' : 'rgba(243,223,192,0.08)'}`, color: '#e2e2e8', fontFamily: 'var(--font-space-mono), monospace', fontSize: '12px', resize: 'none', outline: 'none' }}
         spellCheck={false}
       />
-      {error && <p className="text-xs mt-1" style={{ color: 'var(--accent-red)' }}>{error}</p>}
-      <button
-        onClick={handleSubmit}
-        className="mt-3 w-full py-2.5 rounded-lg text-sm font-bold transition-all hover:scale-[1.02] active:scale-95"
-        style={{ background: 'var(--accent)', color: 'var(--bg)' }}
-      >
-        Generate Steps →
-      </button>
+      {error && <p style={{ fontSize: '10px', color: '#C45C5C', marginTop: '4px' }}>{error}</p>}
+      <button onClick={handleSubmit} style={{ ...primaryBtn, marginTop: '8px' }}>Generate Steps →</button>
     </div>
   )
 }
 
-/* ─────────────────────────────────────────────
-   Helpers
-   ───────────────────────────────────────────── */
+/* ── Helpers ── */
 function parseDefaultNumbers(algo: AlgoMeta): number[] {
-  try {
-    const parsed = JSON.parse(algo.defaultInput)
-    if (Array.isArray(parsed)) return parsed
-    return []
-  } catch { return [] }
+  try { const p = JSON.parse(algo.defaultInput); if (Array.isArray(p)) return p; return [] } catch { return [] }
 }
-
 function parseSearchDefaults(algo: AlgoMeta): { array: number[]; target: number } {
-  try {
-    const parsed = JSON.parse(algo.defaultInput)
-    if (parsed.array) return { array: parsed.array, target: parsed.target ?? 0 }
-    return { array: [], target: 0 }
-  } catch { return { array: [], target: 0 } }
+  try { const p = JSON.parse(algo.defaultInput); if (p.array) return { array: p.array, target: p.target ?? 0 }; return { array: [], target: 0 } } catch { return { array: [], target: 0 } }
 }
-
 function parseGraphDefaults(algo: AlgoMeta): { graph: Record<string, string[]>; start: string } {
-  try {
-    const parsed = JSON.parse(algo.defaultInput)
-    if (parsed.graph) return { graph: parsed.graph, start: parsed.start || Object.keys(parsed.graph)[0] }
-    return { graph: {}, start: '' }
-  } catch { return { graph: {}, start: '' } }
+  try { const p = JSON.parse(algo.defaultInput); if (p.graph) return { graph: p.graph, start: p.start || Object.keys(p.graph)[0] }; return { graph: {}, start: '' } } catch { return { graph: {}, start: '' } }
 }

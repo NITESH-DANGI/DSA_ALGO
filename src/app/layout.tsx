@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { Sora, Space_Mono } from 'next/font/google'
 import './globals.css'
 import Navbar from '@/components/layout/Navbar'
-import Footer from '@/components/layout/Footer'
+
 
 const sora = Sora({
   subsets: ['latin'],
@@ -37,7 +37,7 @@ export default function RootLayout({
         <main style={{ flex: 1 }}>
           {children}
         </main>
-        <Footer />
+
       </body>
     </html>
   )
