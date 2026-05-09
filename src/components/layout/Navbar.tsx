@@ -5,8 +5,9 @@ import { usePathname } from 'next/navigation'
 const NAV_LINKS = [
   { href: '/algorithms', label: 'Explore', matchPrefix: '/algorithms' },
   { href: '/roadmap', label: 'Roadmap', matchPrefix: '/roadmap' },
-  { href: '#', label: 'Community' },
+  { href: '/about', label: 'About', matchPrefix: '/about' },
   { href: '/docs', label: 'Docs', matchPrefix: '/docs' },
+  { href: '#', label: 'Community' },
   { href: '#', label: 'Live' },
 ]
 
@@ -104,8 +105,41 @@ export default function Navbar() {
         })}
       </div>
 
-      {/* Right: Button + Avatar */}
+      {/* Right: Button + GitHub */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flexShrink: 0 }}>
+        
+        <a
+          href="https://github.com/NITESH-DANGI/DSA_ALGO"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '38px',
+            height: '38px',
+            borderRadius: '50%',
+            background: 'rgba(243,223,192,0.05)',
+            border: '1px solid rgba(243,223,192,0.1)',
+            color: '#d7c4a6',
+            textDecoration: 'none',
+            transition: 'all 0.25s ease',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = 'rgba(243,223,192,0.1)';
+            e.currentTarget.style.color = '#f3dfc0';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = 'rgba(243,223,192,0.05)';
+            e.currentTarget.style.color = '#d7c4a6';
+          }}
+          title="View on GitHub"
+        >
+          <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+          </svg>
+        </a>
+
         <Link
           href="/algorithms"
           style={{
@@ -124,21 +158,6 @@ export default function Navbar() {
         >
           Start Coding
         </Link>
-
-        <div
-          style={{
-            width: '34px',
-            height: '34px',
-            borderRadius: '50%',
-            border: '1px solid rgba(243,223,192,0.15)',
-            background: 'rgba(40,42,46,0.8)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <span className="material-symbols-outlined" style={{ color: '#988f85', fontSize: '18px' }}>person</span>
-        </div>
       </div>
     </div>
   )
