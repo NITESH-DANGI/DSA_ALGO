@@ -126,12 +126,18 @@ export default function Navbar() {
             transition: 'all 0.25s ease',
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.background = 'rgba(243,223,192,0.1)';
-            e.currentTarget.style.color = '#f3dfc0';
+            e.currentTarget.style.background = '#f3dfc0';
+            e.currentTarget.style.color = '#1a1c20';
+            e.currentTarget.style.borderColor = '#f3dfc0';
+            e.currentTarget.style.transform = 'translateY(-2px)';
+            e.currentTarget.style.boxShadow = '0 4px 20px rgba(243, 223, 192, 0.4)';
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.background = 'rgba(243,223,192,0.05)';
             e.currentTarget.style.color = '#d7c4a6';
+            e.currentTarget.style.borderColor = 'rgba(243,223,192,0.1)';
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.boxShadow = 'none';
           }}
           title="View on GitHub"
         >
@@ -142,6 +148,7 @@ export default function Navbar() {
 
         <Link
           href="/algorithms"
+          className="nav-btn-primary"
           style={{
             padding: '8px 22px',
             borderRadius: '9999px',
@@ -152,7 +159,6 @@ export default function Navbar() {
             fontSize: '13px',
             fontWeight: 500,
             textDecoration: 'none',
-            transition: 'all 0.25s ease',
             letterSpacing: '0.02em',
           }}
         >

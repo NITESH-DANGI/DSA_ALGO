@@ -33,17 +33,19 @@ export default function AlgoCard({ algo, index }: AlgoCardProps) {
           flexDirection: 'column' as const,
           gap: '12px',
           backdropFilter: 'blur(12px)',
-          transition: 'border-color 0.3s, box-shadow 0.3s',
+          transition: 'all 0.3s ease',
           cursor: 'pointer',
           minHeight: '210px',
         }}
         onMouseEnter={e => {
-          e.currentTarget.style.borderColor = 'rgba(243,223,192,0.18)'
-          e.currentTarget.style.boxShadow = '0 8px 32px rgba(0,0,0,0.3)'
+          e.currentTarget.style.borderColor = 'rgba(243,223,192,0.3)'
+          e.currentTarget.style.boxShadow = '0 8px 32px rgba(243,223,192,0.1)'
+          e.currentTarget.style.transform = 'translateY(-4px)'
         }}
         onMouseLeave={e => {
           e.currentTarget.style.borderColor = 'rgba(243,223,192,0.08)'
           e.currentTarget.style.boxShadow = 'none'
+          e.currentTarget.style.transform = 'translateY(0)'
         }}
       >
         {/* Title */}
@@ -125,12 +127,18 @@ export default function AlgoCard({ algo, index }: AlgoCardProps) {
             marginTop: '4px',
           }}
           onMouseEnter={e => {
-            e.currentTarget.style.background = 'rgba(243,223,192,0.12)'
-            e.currentTarget.style.borderColor = 'rgba(243,223,192,0.2)'
+            e.currentTarget.style.background = '#f3dfc0'
+            e.currentTarget.style.color = '#1a1c20'
+            e.currentTarget.style.borderColor = '#f3dfc0'
+            e.currentTarget.style.transform = 'translateY(-2px)'
+            e.currentTarget.style.boxShadow = '0 4px 20px rgba(243, 223, 192, 0.4)'
           }}
           onMouseLeave={e => {
             e.currentTarget.style.background = 'rgba(243,223,192,0.06)'
+            e.currentTarget.style.color = '#cfc5b9'
             e.currentTarget.style.borderColor = 'rgba(243,223,192,0.1)'
+            e.currentTarget.style.transform = 'translateY(0)'
+            e.currentTarget.style.boxShadow = 'none'
           }}
         >
           Visualize

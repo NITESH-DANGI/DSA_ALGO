@@ -114,6 +114,7 @@ export default function HeroSection() {
         <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', flexWrap: 'wrap' as const }}>
           <a
             href="/algorithms"
+            className="hero-btn-primary"
             style={{
               display: 'inline-flex',
               alignItems: 'center',
@@ -135,6 +136,7 @@ export default function HeroSection() {
           </a>
           <Link
             href="/algorithms"
+            className="hero-btn-secondary"
             style={{
               display: 'inline-flex',
               alignItems: 'center',
