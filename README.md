@@ -2,7 +2,7 @@
 
 AlgoFlow is a beautiful, interactive visualizer for Data Structures and Algorithms. Built from the ground up to make learning complex algorithms intuitive and engaging, featuring a luxury-tech aesthetic, dynamic animations, and a structured learning roadmap.
 
-![AlgoFlow Demo Preview](https://github.com/NITESH-DANGI/DSA_ALGO/assets/placeholder.png)
+![AlgoFlow Demo Preview](https://dsa-algo-fgja.vercel.app/)
 
 ## Features
 

@@ -7,8 +7,8 @@ const NAV_LINKS = [
   { href: '/roadmap', label: 'Roadmap', matchPrefix: '/roadmap' },
   { href: '/about', label: 'About', matchPrefix: '/about' },
   { href: '/docs', label: 'Docs', matchPrefix: '/docs' },
-  { href: '#', label: 'Community' },
-  { href: '#', label: 'Live' },
+  { href: '/community', label: 'Community', matchPrefix: '/community' },
+  { href: '/live', label: 'Live', matchPrefix: '/live' },
 ]
 
 export default function Navbar() {
